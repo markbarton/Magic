@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:views="shinydesign.boilerroom.views.*" width="400" height="250">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.DragEvent;
+			
+			import org.osflash.signals.Signal;
+			
+			import shinydesign.boilerroom.model.vo.Template;
+			
+			public var tmpSignal:Signal=new Signal();
+			public var dragStartSignal:Signal=new Signal();
+			
+			protected function templates_dragDropHandler(event:DragEvent):void
+			{
+				var obj:Object=event.dragInitiator;
+				//Selected Template being dropped
+				var temp:Template=obj.selectedItems[0];
+				tmpSignal.dispatch(temp);
+				
+			}
+			
+			protected function templateGrid_dragStartHandler(event:DragEvent):void
+			{
+				//dispatch drag start signal - for effects to kick off
+				 dragStartSignal.dispatch();
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5"/>
+	</s:layout>
+	
+	<mx:DataGrid id="templateGrid" dropEnabled="true" dragEnabled="true" dragStart="templateGrid_dragStartHandler(event)" dragMoveEnabled="true" dragDrop="templates_dragDropHandler(event)" width="90%" height="130">
+		<mx:columns>
+			<mx:DataGridColumn dataField="Category" headerText="Category" />
+			<mx:DataGridColumn dataField="Title" headerText="Title" />
+		</mx:columns> 
+		
+	</mx:DataGrid>
+	
+	<s:Label id="Description" text="{templateGrid.selectedItem.Description}" width="90%"  />
+	
+</s:Panel>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" 
+		 xmlns:views="shinydesign.boilerroom.views.*" 
+		 xmlns:components="shinydesign.boilerroom.views.components.*" xmlns:contentparser="shinydesign.boilerroom.views.contentparser.*" xmlns:component="shinydesign.boilerroom.views.contentparser.component.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import images.*;
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout  gap="20" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+	</s:layout>	
+	 
+	<s:Scroller id="contentScroller2" width="100%" height="100%" minWidth="0" minHeight="0">
+<s:VGroup>
+	
+		<s:HGroup gap="20" horizontalAlign="center" verticalAlign="middle">
+		
+		<component:Templates  title="Templates" skinClass="shinydesign.boilerroom.views.contentparser.skins.TemplatePanelSkin"  cornerRadius="5"/>
+		<s:BitmapImage  source="{images.ImageAsset.RightArrowIcon}" id="rightArrow" />
+		
+		<component:TemplatesTarget title="Selected Templates" cornerRadius="5" skinClass="shinydesign.boilerroom.views.contentparser.skins.TemplatesTargetSkin" />
+	
+	</s:HGroup>
+
+	<s:HGroup gap="20" horizontalAlign="center" verticalAlign="middle">
+		<component:ContentToBeParsed title="Content to be converted" cornerRadius="5"  styleName="textPanel" skinClass="shinydesign.boilerroom.views.contentparser.skins.ContentToBeParsedSkin"/>
+		<s:BitmapImage  source="{images.ImageAsset.RightArrowIcon}" />
+		
+		<component:ParsedContent title="Parsed Content ready for Superfacts" cornerRadius="5"  styleName="parsedContent" skinClass="shinydesign.boilerroom.views.contentparser.skins.ParsedContentSkin"/>
+	</s:HGroup>
+</s:VGroup>
+</s:Scroller>
+</s:Group>

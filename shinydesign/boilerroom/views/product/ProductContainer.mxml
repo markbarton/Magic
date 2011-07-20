@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
+		 xmlns:views="shinydesign.boilerroom.views.*" 
+		 xmlns:product="shinydesign.boilerroom.views.product.*"
+					  xmlns:components="shinydesign.boilerroom.views.components.*" xmlns:tours="shinydesign.boilerroom.views.product.tours.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:states>
+		<s:State  name="Normal" />
+		
+<s:State name="Tours"/>
+		<s:State name="Hotels"/>
+	</s:states>
+	
+	<s:layout>
+		<s:VerticalLayout gap="0" paddingTop="0" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+	</s:layout>	
+	<s:Scroller id="contentScroller" width="100%" height="100%" minWidth="0" minHeight="0">
+	<s:HGroup>
+		
+		<s:VGroup>
+		<product:ProductList includeIn="Normal,Tours,Hotels"/>	
+			<!--Product Data Grid is dependent on which Product is selected-->
+			<tours:ToursDataGrid id="toursData" width="650" height="100%" skinClass="shinydesign.boilerroom.views.components.ProductSelectionSkin" includeIn="Tours"/>
+		
+		</s:VGroup>
+	
+		
+	<tours:TourInformation  id="tourInformation" width="570" top="10" bottom="10" />	
+	</s:HGroup>
+	</s:Scroller>
+</s:Group>

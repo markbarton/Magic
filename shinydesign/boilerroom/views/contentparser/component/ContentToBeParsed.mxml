@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		  width="400" height="250">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import org.osflash.signals.Signal;
+			
+			import spark.events.TextOperationEvent;
+			
+			public var tmpSignal:Signal=new Signal();
+			
+			protected function inputContent_changeHandler(event:TextOperationEvent):void
+			{
+				
+				tmpSignal.dispatch(inputContent.text);
+				
+			}
+			
+			protected function inputContent_focusInHandler(event:FocusEvent):void
+			{
+				// TODO Auto-generated method stub
+			if(inputContent.text=="Paste content here to be converted...")
+				inputContent.text="";
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5"/>
+	</s:layout>
+	
+	<s:TextArea  height="180" width="100%" id="inputContent" change="inputContent_changeHandler(event)" text="Paste content here to be converted..." focusIn="inputContent_focusInHandler(event)" />
+	
+	
+</s:Panel>

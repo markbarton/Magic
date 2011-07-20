@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				   xmlns:s="library://ns.adobe.com/flex/spark" 
+				   xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="58" xmlns:utils="shinydesign.boilerroom.utils.*" xmlns:skin="shinydesign.boilerroom.views.topbanner.skin.*">
+	<fx:Script>
+		<![CDATA[
+			import images.ImageAsset;
+			
+			import org.osflash.signals.Signal;
+			
+			public var tmpSignal:Signal=new Signal();
+			public var buttons:Array=['contentParserButton','productInformationButton','adminButton'];
+			public var activeButton:String="";
+			
+			public function setActiveButton(buttonID:String):void{
+				for (var i:String in buttons)
+				{
+					if(buttons[i]!=buttonID){
+						//set state to normal
+						var buttonnew:IconButton=this[buttons[i]];
+						buttonnew.activated=false;
+					}
+				}
+				//Set flag
+				activeButton=buttonID;
+				
+				//Update state on active button
+				var button:IconButton=this[buttonID];
+				button.activated=true;
+				
+				//Set title
+				bannerTitle.text=button.toolTip;
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				//set active button & deactive others
+				setActiveButton(event.currentTarget.id);
+				
+				tmpSignal.dispatch(event.currentTarget.id);
+				//var iconButton:IconButton=event.currentTarget as IconButton;
+				//iconButton.activated=true;
+				
+				
+			}
+			 
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+	</fx:Declarations>
+		<s:BitmapImage source="{images.ImageAsset.TitleIcon}" left="5" verticalAlign="middle" top="9"/>
+	<s:Label left="140" top="18" id="bannerTitle" fontSize="18"/>
+			<s:HGroup verticalAlign="middle" height="100%" paddingRight="5" width="100%" horizontalAlign="right" right="0">
+				<skin:IconButton buttonMode="true" id="contentParserButton" skinClass="shinydesign.boilerroom.views.topbanner.skin.IconButtonSkin"  height="50" width="50"
+								  downIcon="{images.ImageAsset.parserButtonDown}" 
+								  overIcon="{images.ImageAsset.parserButtonOver}"
+								  normalIcon="{images.ImageAsset.parserButton}" 
+								  click="button1_clickHandler(event)" toolTip="Content Parser" />
+				
+				<skin:IconButton buttonMode="true" id="productInformationButton" skinClass="shinydesign.boilerroom.views.topbanner.skin.IconButtonSkin"  height="50" width="50"
+								  downIcon="{images.ImageAsset.productButtonDown}" 
+								  overIcon="{images.ImageAsset.productButtonOver}"
+								  normalIcon="{images.ImageAsset.productButton}" 
+								  click="button1_clickHandler(event)" toolTip="Product Information" />
+				
+				
+				<skin:IconButton buttonMode="true" id="adminButton" skinClass="shinydesign.boilerroom.views.topbanner.skin.IconButtonSkin"  height="50" width="50"
+						  downIcon="{images.ImageAsset.adminButtonDown}" 
+						  overIcon="{images.ImageAsset.adminButtonOver}"
+						  normalIcon="{images.ImageAsset.adminButton}" 
+						  click="button1_clickHandler(event)" toolTip="Administration" />
+				
+				
+			</s:HGroup>
+			
+	
+	<s:Line left="0" right="0" bottom="0">
+		<s:stroke>
+			<s:SolidColorStroke color="#388CD7"
+								weight="8"
+								caps="square" />
+		</s:stroke>
+	</s:Line>
+	
+</s:BorderContainer>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="520" height="250">
+	
+	<fx:Script>
+		<![CDATA[
+			import org.osflash.signals.Signal;
+			
+			public var tmpSignal:Signal=new Signal();
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				//Dispatch Signal to mediator that user wants content posted to server
+				
+				tmpSignal.dispatch(ParsedContentContainer.text);
+				
+				//Previous code disabled
+				//System.setClipboard(ParsedContentContainer.text);
+				//copyButton.label="Copied";
+				colorEffect.play();
+				
+			}
+			
+		
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:AnimateColor id="colorEffect"
+						colorPropertyName="backgroundColor"
+						colorFrom="0x7D1B17"
+						colorTo="#FFFBFF"
+						repeatBehavior="loop"
+						repeatCount="1"
+						duration="200"  target="{this}"/>
+	</fx:Declarations> 
+	
+	
+		<s:layout>
+		<s:VerticalLayout paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5" horizontalAlign="center"/>
+	</s:layout>
+	<s:TextArea id="ParsedContentContainer" width="100%" height="180"/>
+
+	<s:Button label="Send to Server" click="button1_clickHandler(event)" visible="false" id="copyButton" />
+	
+</s:Panel>

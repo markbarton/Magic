@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+    ADOBE SYSTEMS INCORPORATED
+    Copyright 2008 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: Adobe permits you to use, modify, and distribute this file
+    in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- The default skin class for the Spark Button component.  
+
+       @see spark.components.Button
+        
+      @langversion 3.0
+      @playerversion Flash 10
+      @playerversion AIR 1.5
+      @productversion Flex 4
+-->
+<s:SparkButtonSkin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+             xmlns:s="library://ns.adobe.com/flex/spark" 
+             xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+             alpha.disabled="0.5">
+	<fx:Metadata>[HostComponent("shinydesign.boilerroom.views.topbanner.skin.IconButton")]</fx:Metadata>
+     
+	<fx:Script>
+		<![CDATA[
+			import images.ImageAsset;
+		]]>
+	</fx:Script>
+	
+	<s:transitions>
+		<s:Transition fromState="*" toState="active">
+			<s:Sequence>
+				<s:AnimateColor target="{buttonBackground}" duration="500" colorPropertyName="color" colorFrom="0x000000" colorTo="#F2DEA0"/>
+				<s:AnimateColor target="{buttonBackground}" duration="500" colorPropertyName="color" colorFrom="#F2DEA0" colorTo="#388cd7"/>
+							
+			</s:Sequence>
+		</s:Transition>
+			</s:transitions>
+	
+	<!-- states -->
+	<s:states>
+		<s:State name="up" />
+		<s:State name="over" />
+		<s:State name="down" />
+		<s:State name="disabled" />
+		<s:State name="active" />
+	</s:states>
+	
+		
+	<s:Rect  left="0" right="0" top="0" bottom="0" topLeftRadiusX="5" topRightRadiusX="5" >
+		<s:fill>
+			<s:SolidColor id="buttonBackground" color="0x000000" color.active="#388cd7" alpha="0" alpha.active="1" /> 
+		</s:fill> 
+	</s:Rect> 
+	<s:VGroup horizontalAlign="center" verticalAlign="middle" left="9" top="9">
+		<s:BitmapImage id="normalIconImage" includeIn="up, disabled,active" />
+		<s:BitmapImage id="overIconImage" includeIn="over"/> 
+		<s:BitmapImage id="downIconImage" includeIn="down"/>    	
+	</s:VGroup>	
+	
+		
+	
+</s:SparkButtonSkin>

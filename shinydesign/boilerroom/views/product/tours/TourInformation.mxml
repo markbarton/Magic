@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%" height="100%" contentBackgroundColor="#000000" skinClass="shinydesign.boilerroom.views.product.tours.TourInformationSkin" >
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import shinydesign.boilerroom.model.vo.Tour;
+			[Bindable]
+			public var currentTour:Tour;
+			
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State  name="Normal" />
+		<s:State name="DataLoaded" />
+	</s:states>
+	
+	<s:transitions>
+		<s:Transition fromState="*" toState="DataLoaded" >
+			<s:Sequence>
+				<s:Fade  alphaFrom="0.0"  alphaTo="1.0" target="{ProductInfoHolder}" />	
+			</s:Sequence>
+		</s:Transition>
+		<s:Transition fromState="DataLoaded" toState="*" >
+			<s:Sequence>
+				<s:Fade  alphaFrom="1.0"  alphaTo="0.0" target="{ProductInfoHolder}" />	
+			</s:Sequence>
+		</s:Transition>
+	</s:transitions>
+		<s:Group includeIn="DataLoaded" id="ProductInfoHolder" width="100%" height="100%">
+			
+	
+	<s:BitmapImage id="tourThumb" right="5" top="0" source="{currentTour.Thumbnail}"/>
+	<s:Label x="10" y="10" color="#FFFFFF" fontSize="18" text="{currentTour.Title}"/>
+	<s:Label x="10" y="35" color="#FFFFFF" fontSize="16"
+			 text="{currentTour.Continent} / {currentTour.Country} / {currentTour.StartPoint}" />
+	<s:Label x="10" y="60" color="#FFFFFF" fontSize="13"
+			 text="Tour Style: {currentTour.TourStyle}"/>
+	<s:Label x="10" y="80" color="#FFFFFF" fontSize="13"
+			 text="{currentTour.Duration}"/>
+	<s:Label x="10" y="100" color="#FFFFFF" fontSize="13" fontWeight="bold"
+			 text="£{currentTour.GBP}"/>
+	<s:Label x="60" y="100" color="#FFFFFF" fontSize="13" fontWeight="bold"
+			 text="€{currentTour.EUR}"/>
+	<s:Label x="110" y="100" color="#FFFFFF" fontSize="13" fontWeight="bold"
+			 text="AUD${currentTour.AUD}"/>
+	
+	
+	<s:TabBar id="tabs" left="10"  top="150" dataProvider="{vs}" />
+	
+	<mx:ViewStack id="vs" left="10" right="10" top="175" bottom="10">
+		<s:NavigatorContent width="100%" height="100%" label="Introduction"
+							contentBackgroundAlpha="0.0" contentBackgroundColor="#A31C1C">
+			<s:BorderContainer width="100%" height="100%" borderWeight="2" 
+							   cornerRadius="3" dropShadowVisible="true">
+				<s:backgroundFill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="#454545" />
+						<s:GradientEntry color="0x818181" />
+					</s:LinearGradient>
+				</s:backgroundFill>
+				
+			
+			<s:Scroller left="1" right="1" top="1" bottom="1">
+				<s:Group >
+					<s:TextArea editable="false" 
+								color="#FFFFFF" fontWeight="normal" text="{currentTour.Intro}" left="1" right="1" top="1" bottom="1" borderVisible="false"/>
+				</s:Group>
+			</s:Scroller>
+				</s:BorderContainer>
+		</s:NavigatorContent>
+		<s:NavigatorContent width="100%" height="100%" label="Itinerary"
+							contentBackgroundAlpha="0.0" contentBackgroundColor="#A31C1C">
+			<s:BorderContainer width="100%" height="100%" borderWeight="2" 
+							   cornerRadius="3" dropShadowVisible="true">
+				<s:backgroundFill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="#454545" />
+						<s:GradientEntry color="0x818181" />
+					</s:LinearGradient>
+				</s:backgroundFill>
+				
+			<s:Scroller left="1" right="1" top="1" bottom="1">
+				<s:Group >
+					<s:TextArea editable="false" 
+								color="#FFFFFF" text="{currentTour.Itinerary}" left="1" right="1" top="1" bottom="1" borderVisible="false" />
+				</s:Group>
+			</s:Scroller>
+		</s:BorderContainer>
+		</s:NavigatorContent>
+		<s:NavigatorContent width="100%" height="100%" label="Highlights"
+							contentBackgroundAlpha="0.0" contentBackgroundColor="#A31C1C">
+			<s:BorderContainer width="100%" height="100%" borderWeight="2" 
+							   cornerRadius="3" dropShadowVisible="true">
+				<s:backgroundFill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="#454545" />
+						<s:GradientEntry color="0x818181" />
+					</s:LinearGradient>
+				</s:backgroundFill>
+				
+			<s:Scroller left="1" right="1" top="1" bottom="1">
+				<s:Group >
+					<s:TextArea editable="false" 
+								color="#FFFFFF" text="{currentTour.Highlights}" left="1" right="1" top="1" bottom="1" borderVisible="false" />
+				</s:Group>
+			</s:Scroller>
+				</s:BorderContainer>
+		</s:NavigatorContent>
+		<s:NavigatorContent width="100%" height="100%" label="Extras"
+							contentBackgroundAlpha="0.0" contentBackgroundColor="#A31C1C">
+			<s:BorderContainer width="100%" height="100%" borderWeight="2" 
+							   cornerRadius="3" dropShadowVisible="true">
+				<s:backgroundFill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="#454545" />
+						<s:GradientEntry color="0x818181" />
+					</s:LinearGradient>
+				</s:backgroundFill>
+				
+			<s:Scroller left="1" right="1" top="1" bottom="1">
+				<s:Group >
+					<s:TextArea editable="false" 
+								color="#FFFFFF" text="{currentTour.Extras}" left="1" right="1" top="1" bottom="1" borderVisible="false" />
+				</s:Group>
+			</s:Scroller>
+				</s:BorderContainer>
+		</s:NavigatorContent>
+		<s:NavigatorContent width="100%" height="100%" label="Inclusions"
+							contentBackgroundAlpha="0.0" contentBackgroundColor="#A31C1C">
+			<s:BorderContainer width="100%" height="100%" borderWeight="2" 
+							   cornerRadius="3" dropShadowVisible="true">
+				<s:backgroundFill>
+					<s:LinearGradient rotation="90">
+						<s:GradientEntry color="#454545" />
+						<s:GradientEntry color="0x818181" />
+					</s:LinearGradient>
+				</s:backgroundFill>
+				
+			<s:Scroller left="1" right="1" top="1" bottom="1">
+				<s:Group >
+					<s:TextArea editable="false" 
+								color="#FFFFFF" text="{currentTour.Inclusions}" left="1" right="1" top="1" bottom="1" borderVisible="false" />
+				</s:Group>
+			</s:Scroller>
+				</s:BorderContainer>
+		</s:NavigatorContent>
+	</mx:ViewStack>
+		</s:Group>
+</s:SkinnableContainer>

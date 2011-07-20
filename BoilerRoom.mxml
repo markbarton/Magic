@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:context="shinydesign.boilerroom.*"
+			   xmlns:views="shinydesign.boilerroom.views.*" xmlns:components="shinydesign.boilerroom.views.components.*" xmlns:contentparser="shinydesign.boilerroom.views.contentparser.*" xmlns:topbanner="shinydesign.boilerroom.views.topbanner.*" xmlns:product="shinydesign.boilerroom.views.product.*" >
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<context:BoilerRoomContext contextView="{this}"/>
+		
+	</fx:Declarations>
+	<s:transitions>
+		<s:Transition fromState="*" toState="ProductInformation" >
+			<s:Sequence>
+				<s:SetAction target="{productList}" property="visible" value="false"/>
+					<s:Fade  alphaFrom="1.0"  alphaTo="0.0" target="{contentParser}" />	
+					<s:Fade  alphaFrom="0.0"  alphaTo="1.0" target="{productList}" />	
+			</s:Sequence>
+			
+		</s:Transition>
+		<s:Transition fromState="*" toState="ContentParser" >
+			<s:Sequence>
+				<s:SetAction target="{contentParser}" property="visible" value="false"/>
+				<s:Fade  alphaFrom="1.0"  alphaTo="0.0" target="{productList}" />	
+				<s:Fade  alphaFrom="0.0"  alphaTo="1.0" target="{contentParser}" />	
+			</s:Sequence>
+			
+		</s:Transition>
+		
+		
+	</s:transitions>
+	<s:states>
+		<s:State id="ContentParser" name="ContentParser"/>
+		<s:State id="ProductInformation" name="ProductInformation"/>
+		
+	</s:states>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		@namespace components "shinydesign.boilerroom.views.components.*";
+		@namespace component "shinydesign.boilerroom.views.contentparser.component.*";
+		.topBanner {
+			color: #FFFFFF;
+			fontWeight: bold;
+			fontSize: 24;
+			backgroundColor: #000000 ;
+			
+		}
+		s|Application{
+			backgroundColor: #323232 ;
+		}
+		.topBanner s|Button{
+			color: #000000;
+			fontWeight: bold;
+			fontSize: 14;
+			fontStyle: normal;
+		}
+		s|Panel{
+			backgroundColor: #F2DEA0 ;
+		}
+		mx|DataGridColumn{
+			fontSize:12;
+		}
+		component|Templates #Description{
+			color:#333333;
+		}
+		.textPanel{
+			backgroundColor: #FFFBFF ;
+		}
+		.parsedContent{
+			backgroundColor: #FFFBFF ;
+		}
+		.parsedContent s|TextArea{
+			color:#18293B;
+			fontFamily: "Courier New";
+		}
+		global
+		{
+			content-background-color: #FFFFFF;
+		}
+			s|ButtonBarButton:upAndSelected,
+			 s|ButtonBarButton:overAndSelected,
+			 s|ButtonBarButton:downAndSelected,
+			s|ButtonBarButton:disabledAndSelected {
+				chromeColor: #388CD7;
+				color: #FFFFFF;
+			}
+			s|ButtonBar, s|TabBar { 
+				chromeColor: #464646;
+				color: #FFFFFF;
+			}
+		
+		
+			
+	</fx:Style>
+	<fx:Script>
+		<![CDATA[
+			import images.*;
+		]]>
+	</fx:Script>
+	 
+	
+	<topbanner:TopBannerControls styleName="topBanner"  includeIn="ContentParser, ProductInformation"/>
+	<s:VGroup gap="20" paddingTop="5" top="65" paddingLeft="5" paddingRight="5" paddingBottom="5">
+	<contentparser:ContentParserContainer includeIn="ContentParser" id="contentParser"  />
+	<product:ProductContainer includeIn="ProductInformation" id="productList"/>
+	</s:VGroup>
+	
+</s:Application>
