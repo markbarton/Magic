@@ -4,6 +4,7 @@ package shinydesign.boilerroom.model.vo
 	 * This represents the application config object
 	 **/
 	import shinydesign.boilerroom.utils.HashMap;
+	import shinydesign.boilerroom.utils.HashMapEntry;
 	
 	[Bindable]
 	public class ApplicationConfig
@@ -15,7 +16,29 @@ package shinydesign.boilerroom.model.vo
 		private var _LoginSuccessRedirection:String;
 		private var _URLEndPoints:HashMap;
 		private var _SearchMail:Boolean;
+		private var _Version:String;
+		private var _URLEndPointsString:String;
 		
+		public function get URLEndPointsString():String
+		{
+			return _URLEndPointsString;
+		}
+
+		public function set URLEndPointsString(value:String):void
+		{
+			_URLEndPointsString = value;
+		}
+
+		public function get Version():String
+		{
+			return _Version;
+		}
+
+		public function set Version(value:String):void
+		{
+			_Version = value;
+		}
+
 		public function get SearchMail():Boolean
 		{
 			return _SearchMail;

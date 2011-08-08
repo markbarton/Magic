@@ -15,13 +15,13 @@ package shinydesign.boilerroom.views.mediators
 		public var view:TemplatesTarget;
 		[Inject]
 		public var dragStarted:DragStartedSignal;
-		
+	
 		override public function onRegister():void
 		{ 
 			//Listen for the view signal so we can redispatch - actual logic for handling is managed elsewhere
 			view.tmpSignal.add(templateSelected);
 			dragStarted.add(animateBackground);
-			
+		
 		}
 		
 		private function animateBackground():void

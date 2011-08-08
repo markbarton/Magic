@@ -2,57 +2,115 @@
 <s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 width="100%" height="100%" contentBackgroundColor="#000000" skinClass="shinydesign.boilerroom.views.product.tours.TourInformationSkin" >
+		 width="100%" height="100%" contentBackgroundColor="#000000"
+		 >
+	
+	<fx:Script>
+		<![CDATA[
+			public var tmpSignal:Signal=new Signal;
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				tmpSignal.dispatch(currentTour.Itinerary);
+			}
+		]]>
+	</fx:Script>
+	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import org.osflash.signals.Signal;
+			
 			import shinydesign.boilerroom.model.vo.Tour;
 			[Bindable]
 			public var currentTour:Tour;
 			
+			
+			
+			
+			[SkinPart(required="true")]
+			public var LoadingLabel:Label;
+			
+			override protected function getCurrentSkinState():String {
+				return currentState;
+			}
+			override protected function partAdded(partName:String, instance:Object):void {
+				super.partAdded(partName, instance);
+				
+				if (instance == LoadingLabel) {
+					LoadingLabel.text=LoadingTitle;
+				}
+			}
+			
+			[Bindable]
+			public function get LoadingTitle():String
+			{
+				return _LoadingTitle;
+			}
+			
+			public function set LoadingTitle(value:String):void
+			{
+				_LoadingTitle = value;
+			}
+			
+			private var _LoadingTitle:String;
+			
+			
 		]]>
 	</fx:Script>
+	<fx:Metadata>
+		[SkinState("DataLoaded")]
+		[SkinState("LoadingData")]
+		[SkinState("normal")]
+		
+	</fx:Metadata>
+	
 	<s:states>
-		<s:State  name="Normal" />
-		<s:State name="DataLoaded" />
+		<s:State name="normal" enterState="invalidateSkinState()" />
+		<s:State name="DataLoaded" enterState="invalidateSkinState()" />
+		<s:State name="LoadingData" enterState="invalidateSkinState()" />
 	</s:states>
 	
 	<s:transitions>
-		<s:Transition fromState="*" toState="DataLoaded" >
-			<s:Sequence>
-				<s:Fade  alphaFrom="0.0"  alphaTo="1.0" target="{ProductInfoHolder}" />	
-			</s:Sequence>
-		</s:Transition>
 		<s:Transition fromState="DataLoaded" toState="*" >
 			<s:Sequence>
-				<s:Fade  alphaFrom="1.0"  alphaTo="0.0" target="{ProductInfoHolder}" />	
+				<s:Fade  alphaFrom="1.0"  alphaTo="0.0" target="{ProductInfoHolder}" startDelay="300"/>	
 			</s:Sequence>
 		</s:Transition>
+		<s:Transition fromState="*" toState="DataLoaded" >
+			<s:Sequence>
+				<s:Fade  alphaFrom="0.0"  alphaTo="1.0" target="{ProductInfoHolder}" startDelay="300"/>	
+			</s:Sequence>
+		</s:Transition>
+	
+		
 	</s:transitions>
-		<s:Group includeIn="DataLoaded" id="ProductInfoHolder" width="100%" height="100%">
+	
+	<s:Group includeIn="DataLoaded" id="ProductInfoHolder" width="100%" height="100%">
 			
 	
-	<s:BitmapImage id="tourThumb" right="5" top="0" source="{currentTour.Thumbnail}"/>
-	<s:Label x="10" y="10" color="#FFFFFF" fontSize="18" text="{currentTour.Title}"/>
+	<s:BitmapImage id="tourThumb" right="5" top="0" source="{currentTour.Thumbnail}" includeIn="DataLoaded"/>
+	<s:Label x="10" y="10" color="#FFFFFF" fontSize="18" text="{currentTour.Title}" includeIn="DataLoaded"/>
 	<s:Label x="10" y="35" color="#FFFFFF" fontSize="16"
-			 text="{currentTour.Continent} / {currentTour.Country} / {currentTour.StartPoint}" />
+			 text="{currentTour.Continent} / {currentTour.Country} / {currentTour.StartPoint}" includeIn="DataLoaded"/>
 	<s:Label x="10" y="60" color="#FFFFFF" fontSize="13"
-			 text="Tour Style: {currentTour.TourStyle}"/>
+			 text="Tour Style: {currentTour.TourStyle}" includeIn="DataLoaded"/>
 	<s:Label x="10" y="80" color="#FFFFFF" fontSize="13"
-			 text="{currentTour.Duration}"/>
+			 text="{currentTour.Duration}" includeIn="DataLoaded"/>
 	<s:Label x="10" y="100" color="#FFFFFF" fontSize="13" fontWeight="bold"
-			 text="£{currentTour.GBP}"/>
+			 text="£{currentTour.GBP}" includeIn="DataLoaded"/>
 	<s:Label x="60" y="100" color="#FFFFFF" fontSize="13" fontWeight="bold"
-			 text="€{currentTour.EUR}"/>
+			 text="€{currentTour.EUR}" includeIn="DataLoaded"/>
 	<s:Label x="110" y="100" color="#FFFFFF" fontSize="13" fontWeight="bold"
-			 text="AUD${currentTour.AUD}"/>
+			 text="AUD${currentTour.AUD}" includeIn="DataLoaded"/>
 	
 	
-	<s:TabBar id="tabs" left="10"  top="150" dataProvider="{vs}" />
+	<s:TabBar id="tabs" left="10"  top="150" dataProvider="{vs}" includeIn="DataLoaded" />
 	
-	<mx:ViewStack id="vs" left="10" right="10" top="175" bottom="10">
+	<mx:ViewStack id="vs" left="10" right="10" top="175" bottom="10" includeIn="DataLoaded">
 		<s:NavigatorContent width="100%" height="100%" label="Introduction"
 							contentBackgroundAlpha="0.0" contentBackgroundColor="#A31C1C">
 			<s:BorderContainer width="100%" height="100%" borderWeight="2" 
@@ -87,7 +145,8 @@
 			<s:Scroller left="1" right="1" top="1" bottom="1">
 				<s:Group >
 					<s:TextArea editable="false" 
-								color="#FFFFFF" text="{currentTour.Itinerary}" left="1" right="1" top="1" bottom="1" borderVisible="false" />
+								color="#FFFFFF" text="{currentTour.Itinerary}" left="1" right="1" top="30" bottom="1" borderVisible="false" />
+					<s:Button label="Send to Server" id="tourItineraryButton" click="button1_clickHandler(event)" top="5" left="5" />
 				</s:Group>
 			</s:Scroller>
 		</s:BorderContainer>

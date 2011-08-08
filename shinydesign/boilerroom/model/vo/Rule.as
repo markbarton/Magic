@@ -4,7 +4,7 @@ package shinydesign.boilerroom.model.vo
 	public class Rule
 	{
 		private var _NOTEID:String;
-		private var _Sequence:int;
+		private var _Sequence:Number;
 		private var _TextToFind:String;
 		private var _ParitalMatch:Boolean;
 		private var _PartialEnd:Boolean;
@@ -13,6 +13,8 @@ package shinydesign.boilerroom.model.vo
 		private var _TextToReplace:String;
 		private var _TransformText:String;
 		private var _RuleType:String;
+		
+		private var _RuleTitle:String;
 		private var _RegEx:String;
 		private var _InsertTextPosition:String;
 		private var _RegExFlags:String;		
@@ -27,6 +29,16 @@ package shinydesign.boilerroom.model.vo
 		public const RULE_STATIC:String="Static";
 		public const RULE_TRUNCATE:String="Truncate";
 		
+
+		public function get RuleTitle():String
+		{
+			return _RuleTitle;
+		}
+
+		public function set RuleTitle(value:String):void
+		{
+			_RuleTitle = value;
+		}
 
 		public function get TruncateType():String
 		{
@@ -128,12 +140,12 @@ package shinydesign.boilerroom.model.vo
 			_NOTEID = value;
 		}
 
-		public function get Sequence():int
+		public function get Sequence():Number
 		{
 			return _Sequence;
 		}
 
-		public function set Sequence(value:int):void
+		public function set Sequence(value:Number):void
 		{
 			_Sequence = value;
 		}

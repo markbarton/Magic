@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:SkinnableContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" >
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%" height="100%">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -9,14 +10,18 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import images.ImageAsset;
+			
 			import mx.events.ListEvent;
 			
 			import org.osflash.signals.Signal;
 			
+			import spark.components.Label;
 			import spark.events.TextOperationEvent;
 			public var tmpSignal:Signal=new Signal;
 			public var tourSelected:Signal=new Signal;
-			
+			//Used for the loading component;
+	
 			
 			protected function search_changeHandler(event:TextOperationEvent):void
 			{
@@ -30,27 +35,60 @@
 				tourSelected.dispatch(event.currentTarget.selectedItem);
 			}
 			
+			[SkinPart(required="true")]
+			public var LoadingLabel:Label;
+			
+			override protected function getCurrentSkinState():String {
+				return currentState;
+			}
+			override protected function partAdded(partName:String, instance:Object):void {
+				super.partAdded(partName, instance);
+				
+				if (instance == LoadingLabel) {
+					LoadingLabel.text=LoadingTitle;
+				}
+			}
+			
+			[Bindable]
+			public function get LoadingTitle():String
+			{
+				return _LoadingTitle;
+			}
+			
+			public function set LoadingTitle(value:String):void
+			{
+				_LoadingTitle = value;
+			}
+			
+			private var _LoadingTitle:String;
 		]]>
 	</fx:Script>
+	
+	<fx:Metadata>
+		[SkinState("DataLoaded")]
+		[SkinState("LoadingData")]
+	</fx:Metadata>
+	
 	<s:states>
-		<s:State  name="Normal" />
-		<s:State name="DataLoaded" />
+		<s:State name="DataLoaded" enterState="invalidateSkinState()" />
+		<s:State name="LoadingData" enterState="invalidateSkinState()" />
 	</s:states>
 	
 	<s:transitions>
+			
 		<s:Transition fromState="*" toState="DataLoaded" >
+			
 			<s:Sequence>
-				<s:Fade  alphaFrom="0.0"  alphaTo="1.0" target="{dataGridHolder}" />	
+				<s:Fade  alphaFrom="0.0"  alphaTo="1.0" target="{dataGridHolder}"  startDelay="300"/>	
 			</s:Sequence>
 		</s:Transition>
 		<s:Transition fromState="DataLoaded" toState="*" >
 			<s:Sequence>
-				<s:Fade  alphaFrom="1.0"  alphaTo="0.0" target="{dataGridHolder}" />	
+				<s:Fade  alphaFrom="1.0"  alphaTo="0.0" target="{dataGridHolder}" startDelay="300" />	
 			</s:Sequence>
 		</s:Transition>
 	</s:transitions>
-	
-	
+
 	<s:VGroup paddingTop="10" paddingLeft="10" paddingRight="10" paddingBottom="10" includeIn="DataLoaded" id="dataGridHolder">
 	<s:TextInput id="search" change="search_changeHandler(event)"/>	
 	<mx:DataGrid id="tours" width="630" height="100%" rowCount="20" itemClick="tours_changeHandler(event)">

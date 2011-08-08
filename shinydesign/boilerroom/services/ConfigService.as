@@ -58,17 +58,22 @@ package shinydesign.boilerroom.services
 			}
 			//Loop through endpoints and put them in a hashmap
 			config.URLEndPoints=new HashMap();
+			
+			var tmp:String="";
+			
 			for each(var endpoint:XML in event.result.URLEndPoints.EndPoint)
 			{
 				var Key:String=endpoint.Key;
 				var Val:String=endpoint.URL;
+				tmp+=Key + " >> " + Val +"\n";
 				config.URLEndPoints.put(Key,Val);
 			}
+			config.URLEndPointsString=tmp;
 			if(event.result.SearchMail=="true")
 				config.SearchMail=true;
 			else
 				config.SearchMail=false;
-			
+			config.Version=event.result.Version;
 			appConfigLoaded.dispatch(config);
 						
 		}

@@ -30,8 +30,7 @@
 			protected function templateGrid_dragStartHandler(event:DragEvent):void
 			{
 				//dispatch drag start signal - for effects to kick off
-				 dragStartSignal.dispatch();
-				
+				 dragStartSignal.dispatch();	
 			}
 			
 		]]>
@@ -41,7 +40,8 @@
 		<s:VerticalLayout paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5"/>
 	</s:layout>
 	
-	<mx:DataGrid id="templateGrid" dropEnabled="true" dragEnabled="true" dragStart="templateGrid_dragStartHandler(event)" dragMoveEnabled="true" dragDrop="templates_dragDropHandler(event)" width="90%" height="130">
+	<mx:DataGrid id="templateGrid" dropEnabled="true"
+				 dragEnabled="true" dragStart="templateGrid_dragStartHandler(event)" dragMoveEnabled="true" dragDrop="templates_dragDropHandler(event)" width="90%" height="130">
 		<mx:columns>
 			<mx:DataGridColumn dataField="Category" headerText="Category" />
 			<mx:DataGridColumn dataField="Title" headerText="Title" />

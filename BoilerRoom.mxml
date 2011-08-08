@@ -3,7 +3,7 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:context="shinydesign.boilerroom.*"
-			   xmlns:views="shinydesign.boilerroom.views.*" xmlns:components="shinydesign.boilerroom.views.components.*" xmlns:contentparser="shinydesign.boilerroom.views.contentparser.*" xmlns:topbanner="shinydesign.boilerroom.views.topbanner.*" xmlns:product="shinydesign.boilerroom.views.product.*" >
+			   xmlns:views="shinydesign.boilerroom.views.*" xmlns:components="shinydesign.boilerroom.views.components.*" xmlns:contentparser="shinydesign.boilerroom.views.contentparser.*" xmlns:topbanner="shinydesign.boilerroom.views.topbanner.*" xmlns:product="shinydesign.boilerroom.views.product.*" xmlns:admin="shinydesign.boilerroom.views.admin.*" >
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<context:BoilerRoomContext contextView="{this}"/>
@@ -26,12 +26,11 @@
 			</s:Sequence>
 			
 		</s:Transition>
-		
-		
 	</s:transitions>
 	<s:states>
 		<s:State id="ContentParser" name="ContentParser"/>
 		<s:State id="ProductInformation" name="ProductInformation"/>
+		<s:State id="Admin" name="Admin"/>
 		
 	</s:states>
 	<fx:Style>
@@ -85,11 +84,24 @@
 				chromeColor: #388CD7;
 				color: #FFFFFF;
 			}
+		s|Button{
+			chromeColor: #325a3e;
+			color: #FFFFFF;
+		}
 			s|ButtonBar, s|TabBar { 
 				chromeColor: #464646;
 				color: #FFFFFF;
 			}
-		
+		#logButtons{
+			color:#ffffff;
+		}
+		#logButtons s|Button{
+			chromeColor:#cccccc;
+			color:#000000;
+		}
+		s|FormHeading,s|FormItem{
+			color:#ffffff;
+		}
 		
 			
 	</fx:Style>
@@ -100,10 +112,11 @@
 	</fx:Script>
 	 
 	
-	<topbanner:TopBannerControls styleName="topBanner"  includeIn="ContentParser, ProductInformation"/>
+	<topbanner:TopBannerControls styleName="topBanner"  includeIn="ContentParser, ProductInformation, Admin"/>
 	<s:VGroup gap="20" paddingTop="5" top="65" paddingLeft="5" paddingRight="5" paddingBottom="5">
 	<contentparser:ContentParserContainer includeIn="ContentParser" id="contentParser"  />
 	<product:ProductContainer includeIn="ProductInformation" id="productList"/>
+	<admin:LogPanel id="adminPanel" includeIn="Admin" />
 	</s:VGroup>
 	
 </s:Application>

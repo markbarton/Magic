@@ -38,7 +38,7 @@ package shinydesign.boilerroom.views.mediators
 			//Attach to the toursloaded signal
 			toursLoadedSignal.add(updateView);
 			//Attach to the product button press
-			selectedProductSignal.add(clearView);
+			//selectedProductSignal.add(clearView);
 			
 			//If the model already has tours loaded update the view
 			if(toursModel.Tours.length!=0)
@@ -54,7 +54,7 @@ package shinydesign.boilerroom.views.mediators
 			if(view.search!=null)
 			view.search.text="";
 			if(view.currentState!=null)
-			view.currentState="Normal";
+			view.currentState="LoadingData";
 		}
 		
 		private function updateView(toursModel:ToursModel):void

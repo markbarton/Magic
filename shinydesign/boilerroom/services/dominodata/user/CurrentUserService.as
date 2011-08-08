@@ -1,12 +1,15 @@
 package shinydesign.boilerroom.services.dominodata.user
 {
 	import mx.managers.CursorManager;
+	import mx.utils.ObjectUtil;
 	
 	import shinydesign.boilerroom.model.CurrentUserModel;
 	import shinydesign.boilerroom.model.vo.CurrentUser;
 	import shinydesign.boilerroom.services.dominodata.DominoXMLService;
 	import shinydesign.boilerroom.services.dominodata.IDominoXMLService;
 	import shinydesign.boilerroom.signals.CurrentUserLoadedSignal;
+	import shinydesign.boilerroom.utils.Logger;
+
 	public class CurrentUserService extends DominoXMLService implements IDominoXMLService
 	{
 		[Inject]
@@ -15,9 +18,17 @@ package shinydesign.boilerroom.services.dominodata.user
 		[Inject]
 		public var currentUserLoaded:CurrentUserLoadedSignal;
 		
+		
+		
 		public function CurrentUserService()
 		{ 
 			super();
+		}
+		
+		[PostConstruct]
+		public function logStart():void{
+			log.debug("Service >> CurrentUserService Called");
+				
 		}
 		
 		//Implement the handleresult method as we want to use our specific parser
@@ -25,7 +36,6 @@ package shinydesign.boilerroom.services.dominodata.user
 		{
 		
 			CursorManager.removeBusyCursor();
-			trace("Service >> CurrentUserService");
 				
 				var currentUser:CurrentUser=new CurrentUser;
 				for each(var obj:XML in event.result)
@@ -43,7 +53,8 @@ package shinydesign.boilerroom.services.dominodata.user
 				currentUserModel.currentUser=currentUser;
 				//Dispatch Event indicating model has been updated
 				//dispatch(new UserEvent(UserEvent.USER_MODEL_UPDATED));
-				trace("Current User = " + currentUser.CommonUserName);
+				log.info("Service >> CurrentUserService >> Result");
+					
 				currentUserLoaded.dispatch(); //dispatch signal
 	}
 	}

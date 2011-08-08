@@ -7,6 +7,7 @@ package shinydesign.boilerroom.controller
 	import shinydesign.boilerroom.model.TemplatesModel;
 	import shinydesign.boilerroom.model.vo.Template;
 	import shinydesign.boilerroom.signals.ContentProcessedSignal;
+	import shinydesign.boilerroom.utils.Logger;
 	import shinydesign.boilerroom.utils.ProcessTemplates;
 	
 	public class ProcessTemplatesCommand extends SignalCommand
@@ -17,6 +18,8 @@ package shinydesign.boilerroom.controller
 		[Inject]
 		public var contentProcessed:ContentProcessedSignal; //Signal to pass to ProcessTemplates Method
 		
+		[Inject]
+		public var log:Logger; //For all logging
 		//Call the process template class
 		override public function execute():void
 		{
@@ -24,8 +27,9 @@ package shinydesign.boilerroom.controller
 			var process:ProcessTemplates=new ProcessTemplates();
 			//Inject Signal here
 			process.contentProcessed=contentProcessed;
+			process.log=log;
 			process.Templates=templatesModel.SelectedTemplateList;
-			process.processTest(templatesModel.Content);
+			process.processContentWithSignal(templatesModel.Content);
 			
 		}
 	}

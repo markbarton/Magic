@@ -20,11 +20,14 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.events.DragEvent;
+			
 			import org.osflash.signals.Signal;
+			
+			import shinydesign.boilerroom.model.TemplatesModel;
 			import shinydesign.boilerroom.model.vo.Template;
 			
 			public var tmpSignal:Signal=new Signal();
-			
+		
 			protected function templatesTarget_dragDropHandler(event:DragEvent):void
 			{
 				var obj:Object=event.dragInitiator;

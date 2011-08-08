@@ -49,5 +49,20 @@ package images
 		
 		[Embed(source="delete-icon.png")]
 		public static const FailureIcon:Class;
+		
+		[Embed(source="GearsSmallMovie.swf")]
+		public static const Gears:Class;
+		
+		//Logging Icons
+		[Embed(source="log/bug.png")]
+		public static const logBug:Class;
+		[Embed(source="log/exclamation.png")]
+		public static const logExclamation:Class;
+		[Embed(source="log/information.png")]
+		public static const logInformation:Class;
+		[Embed(source="log/warn.png")]
+		public static const logWarn:Class;
+		
+		
 	}
 }

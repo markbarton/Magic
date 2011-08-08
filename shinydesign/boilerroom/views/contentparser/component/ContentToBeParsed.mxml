@@ -3,16 +3,44 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		  width="400" height="250">
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.desktop.Clipboard;
+			import flash.desktop.ClipboardFormats;
+			protected function clearContentButton_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				inputContent.text="";
+				tmpSignal.dispatch(inputContent.text);
+				
+			}
+			
+			protected function pasteContentButton_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+			
+				var str2:String=ExternalInterface.call("PasteFromClipboard");
+				inputContent.text=str2;
+				tmpSignal.dispatch(inputContent.text);
+				}
+			
+		]]>
+	</fx:Script>
+	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import shinydesign.boilerroom.model.vo.BrowserVariables;
 			import org.osflash.signals.Signal;
 			
 			import spark.events.TextOperationEvent;
 			
 			public var tmpSignal:Signal=new Signal();
+			
+		
 			
 			protected function inputContent_changeHandler(event:TextOperationEvent):void
 			{
@@ -36,6 +64,10 @@
 	</s:layout>
 	
 	<s:TextArea  height="180" width="100%" id="inputContent" change="inputContent_changeHandler(event)" text="Paste content here to be converted..." focusIn="inputContent_focusInHandler(event)" />
+	<s:HGroup horizontalAlign="center" width="100%" id="buttonHolder">
+		<s:Button label="Clear Content" id="clearContentButton" click="clearContentButton_clickHandler(event)" />
+		<s:Button label="Paste Content" id="pasteContentButton" click="pasteContentButton_clickHandler(event)"  />
+	</s:HGroup>
 	
 	
 </s:Panel>

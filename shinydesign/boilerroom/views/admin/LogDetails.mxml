@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="700" height="400" title="Log Details" close="handleCloseEvent()">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			
+			// Handle the close button and Cancel button.
+			private function handleCloseEvent():void {
+				PopUpManager.removePopUp(this);
+			}            
+			public function setItem(item:Object):void
+			{
+				message_txt.text = item.message;
+			}
+			
+			
+		]]>
+	</fx:Script>
+	<s:VGroup width="100%" height="100%" horizontalAlign="right" paddingLeft="5" paddingRight="5" paddingTop="5" paddingBottom="5">
+		<s:Scroller width="100%" height="100%">
+			<s:Group>	
+			<s:TextArea editable="false" width="100%" height="100%" right="5" left="5" top="5" bottom="5" id="message_txt" />
+			</s:Group>
+				
+		</s:Scroller>
+		<s:Button label="Close" click="handleCloseEvent()" id="close"/>
+		
+	</s:VGroup>
+</s:TitleWindow>

@@ -11,6 +11,7 @@ package shinydesign.boilerroom.services
 	import shinydesign.boilerroom.model.vo.ApplicationConfig;
 	import shinydesign.boilerroom.model.vo.BrowserVariables;
 	import shinydesign.boilerroom.signals.BrowserIsReadySignal;
+	import shinydesign.boilerroom.utils.Logger;
 	
 	public class BrowserService extends Actor implements IBrowserService
 	{
@@ -20,12 +21,17 @@ package shinydesign.boilerroom.services
 		[Inject]
 		public var browserIsReady:BrowserIsReadySignal;
 		
+		[Inject]
+		public var log:Logger; //For all logging
+		
 		public function BrowserService()
 		{
-			trace("Service >> Browser Service");
+			
 		}
+	
 		
 		public function CheckBrowserReady():void{
+			log.debug("Service >> BrowserService Called");
 			if (ExternalInterface.available)
 			{
 				try
@@ -44,6 +50,7 @@ package shinydesign.boilerroom.services
 						// If the container is not ready, set up a Timer to call the
 						// container at 100ms intervals. Once the container responds that
 						// it's ready, the timer will be stopped.
+						log.debug("BrowserService >> Browser not ready starting timer");
 						var readyTimer:Timer = new Timer(100);
 						readyTimer.addEventListener(TimerEvent.TIMER, timerHandler);
 						readyTimer.start();
@@ -51,18 +58,18 @@ package shinydesign.boilerroom.services
 				}
 				catch (error:SecurityError)
 				{
-					trace("A SecurityError occurred: " + error.message + "\n");
+					log.error("A SecurityError occurred: " + error.message + "\n");
 					throw error;
 				}
 				catch (error:Error)
 				{
-					trace("An Error occurred: " + error.message + "\n");
+					log.error("An Error occurred: " + error.message + "\n");
 					throw error;
 				}
 			}
 			else
 			{
-				trace("External interface is not available for this container.");
+				log.warn("External interface is not available for this container.");
 			}
 		}
 		
@@ -92,6 +99,7 @@ package shinydesign.boilerroom.services
 				if(listOptions.query!=""){
 					//Update Query Value on the Browser Variables Object on the Application Config Model
 					//Get config from Model
+						log.debug("BrowserService >> Got Query from Javascript >> "+ listOptions.query);
 						config.Query=listOptions.query;
 					//Dispatch Event
 						
@@ -103,10 +111,18 @@ package shinydesign.boilerroom.services
 				if(listOptions.configLocation!=""){
 					//Update Config Location Value on the Browser Variables Object on the Application Config Model
 					//Get config from Model
+					log.debug("BrowserService >> Got Config Location from Javascript >> "+ listOptions.configLocation);
 					config.ConfigLocation=listOptions.configLocation;
 				}
 			}
-			
+			if(listOptions.hasOwnProperty("BROWSER_NAME")){
+				if(listOptions.BROWSER_NAME!=""){
+					//Update Config Location Value on the Browser Variables Object on the Application Config Model
+					//Get config from Model
+					log.debug("BrowserService >> Browsername = " + listOptions.BROWSER_NAME);
+					config.BrowserName=listOptions.BROWSER_NAME;
+				}
+			}
 			//dispatch signal
 			browserIsReady.dispatch();
 		}

@@ -8,9 +8,9 @@ package shinydesign.boilerroom.utils
 
 	public class ProcessTemplates
 	{
-		[Inject]
 		public var contentProcessed:ContentProcessedSignal;
-	
+		public var log:Logger; //For all logging
+		
 		//Single Template for testing
 		private var _testTemplate:Template;
 		
@@ -31,14 +31,35 @@ package shinydesign.boilerroom.utils
 			_testTemplate = value;
 		}
 
-		//Test Method
-		public function processTest(content:String):void{
+		//Process content and fire signal
+		public function processContentWithSignal(content:String):void{
+			var workingContent:String=processTest(content);
+			//dispatch signal
+			log.debug("ProcessTemplates >> Dispatch Signal contentProcessed >> " + workingContent) 
+			contentProcessed.dispatch(workingContent)
+		}
+		
+		//Standard text processing no templates
+		public function processStandard(content:String):String{
+			log.debug("ProcessTemplates >> processStandard >> " + content);
 			var workingContent:String=content;
 			//Remove any dodgy characters
 			workingContent=stripAscii(workingContent);
 			//Fix Line Length
 			workingContent=truncateContent(workingContent,69,true);	
 			
+			return workingContent;
+			
+		}
+		
+		//Test Method
+		public function processTest(content:String):String{
+			var workingContent:String=content;
+			//Remove any dodgy characters
+			workingContent=stripAscii(workingContent);
+			//Fix Line Length
+			log.debug("ProcessTemplates >> truncateContent");
+			workingContent=truncateContent(workingContent,69,true);	
 		//Caution maybe no templates - if all have been dragged out
 			if(Templates.length!=0)
 			{
@@ -50,9 +71,13 @@ package shinydesign.boilerroom.utils
 			template.Title=obj.Title;
 			template.UNID=obj.UNID;
 			template.Rules=obj.Rules;
+			log.debug("ProcessTemplates >> Template >> " + obj.Title);
 			for each(var rule:Rule in template.Rules){
 				//Each rule will br run against the content
 				//The rule type will determine now its processed
+				
+				log.debug("ProcessTemplates >> Rule " + rule.RuleTitle + " >> " + rule.RuleType + " ("+rule.Sequence+")"); 
+					 
 				for(var i:Number=0;i<rule.Repeat;i++){
 					
 				
@@ -97,7 +122,6 @@ package shinydesign.boilerroom.utils
 						}else{
 							workingContent=workingContent + rule.TextToReplace;
 						}
-						trace("STATIC TEXT RULE");
 						break;
 					case rule.RULE_TRUNCATE:
 						//Truncate text either at the begining or end ofthe content
@@ -106,9 +130,9 @@ package shinydesign.boilerroom.utils
 								//Remove x number of chars from the string
 								workingContent=workingContent.substr(rule.TruncateLength,workingContent.length)
 							}else{
-								var testString:String=workingContent.substr(0,rule.TruncateReplace.length);
-								if(testString==rule.TruncateReplace)
-									workingContent=workingContent.substr(rule.TruncateReplace.length,workingContent.length)
+								//Find the key word position and take away everything before that including the keyword
+								var testInt:Number=workingContent.indexOf(rule.TruncateReplace)+rule.TruncateReplace.length;	
+								workingContent=workingContent.substr(testInt)
 							}	
 						}else{
 							//Deal with the end of the text
@@ -116,9 +140,14 @@ package shinydesign.boilerroom.utils
 								//Remove x number of chars from the string
 								workingContent=workingContent.substr(0,workingContent.length-rule.TruncateLength)
 							}else{
-								var testString:String=workingContent.substr(workingContent.length-rule.TruncateReplace.length);
-								if(testString==rule.TruncateReplace)
-									workingContent=workingContent.substr(0,workingContent.length-rule.TruncateReplace.length)
+								//Find the key word position and take away everything after that including the keyword
+								log.debug("ProcessTemplates >> Truncating the end of the content") 
+								log.debug("ProcessTemplates >>" + workingContent); 
+								var testEndInt:Number=workingContent.search(rule.TruncateReplace);		
+								log.debug("ProcessTemplates >> " + rule.TruncateReplace + " at " + testEndInt.toString()) 
+								log.debug("ProcessTemplates >> Workingcontent length = " + workingContent.length.toString()) 
+										
+								workingContent=workingContent.substr(0,testEndInt)
 							}	
 							
 						}
@@ -140,9 +169,9 @@ package shinydesign.boilerroom.utils
 			}//End check for templates
 			
 		
-			//dispatch signal
-			trace("dispatching signal contentProcessed >> " + workingContent);
-			contentProcessed.dispatch(workingContent)
+			
+		return workingContent;
+			
 		}
 		
 		
@@ -181,7 +210,7 @@ package shinydesign.boilerroom.utils
 				currentWord="";
 			currentSentance=sentanceSplit[i];
 			if(currentSentance.length<=maxLength){
-				if(currentSentance=="")
+				if(currentSentance==""||currentSentance==" \n"||currentSentance=="\n"||currentSentance==" "||currentSentance=="\r")
 					currentSentance="*";
 				//Sentance is shorter than max lenght so pad it with spaces
 				mySentences.push(padSentence(currentSentance));
@@ -212,8 +241,11 @@ package shinydesign.boilerroom.utils
 					}
 					
 				}
-				if(sentence!="")
+				if(sentence==" \n"||sentence=="\n"||sentence==" "||sentence=="\r")
+				{}
+					else{
 					mySentences.push(padSentence(sentence));
+					}
 				}
 			}
 			
@@ -258,19 +290,7 @@ package shinydesign.boilerroom.utils
 				return processedText;
 		}
 		
-		public function process(content:String):void{
-			//Loop through Templates
-			for each(var template:Template in Templates)
-			{
-			//Loop through each rule and process it
-				for each(var rule:Rule in template.Rules)
-				{
-					trace("RULE >> " + rule.NOTEID);
-					
-				}
-			}
-			
-		}
+		
 		
 		public function replaceString(str:String, find:String, replace:String):String {
 			var startIndex:Number = 0;

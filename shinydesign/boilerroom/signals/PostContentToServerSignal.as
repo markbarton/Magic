@@ -2,11 +2,14 @@ package shinydesign.boilerroom.signals
 {
 	import org.osflash.signals.Signal;
 	
+	import shinydesign.boilerroom.model.vo.PostContent;
+	
 	public class PostContentToServerSignal extends Signal
 	{
-		public function PostContentToServerSignal(...parameters)
+		public function PostContentToServerSignal()
 		{
-			super(String);
+			//Content & Origin ID
+			super(PostContent);
 		}
 	}
 }

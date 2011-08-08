@@ -25,6 +25,8 @@ package shinydesign.boilerroom.views.mediators
 				view.currentState="ProductInformation";
 			if(stateName=="contentParserButton")
 				view.currentState="ContentParser"
+			if(stateName=="adminButton")
+				view.currentState="Admin"
 		}		
 		
 	}

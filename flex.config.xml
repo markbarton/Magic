@@ -1,4 +1,5 @@
 <config>
+<Version>0.5</Version>
 <RemoteDominoServer>http://192.168.1.30/</RemoteDominoServer>
 <ConfigKey>MemoSearch</ConfigKey>
 <AuthenticateUser>false</AuthenticateUser>
@@ -19,11 +20,11 @@
 </EndPoint>
 <EndPoint>
 <Key>CurrentUser</Key>
-<URL>boilerroom.nsf/flex.userprofile.xml?openpage</URL>
+<URL>magic.nsf/flex.userprofile.xml?openpage</URL>
 </EndPoint>
 <EndPoint>
 <Key>LoadAllProducts</Key>
-<URL>boilerroom.nsf/(XMLProducts)?openview&count=-1</URL>
+<URL>magic.nsf/(XMLProducts)?openview&count=-1</URL>
 </EndPoint>
 <EndPoint>
 <Key>LoadAllTours</Key>
@@ -31,7 +32,7 @@
 </EndPoint>
 <EndPoint>
 <Key>SendContent</Key>
-<URL>boilerroom.nsf/ContentToFile?Createdocument</URL>
+<URL>magic.nsf/ContentToFile?Createdocument</URL>
 </EndPoint>
 <EndPoint>
 <Key>LoadTour</Key>

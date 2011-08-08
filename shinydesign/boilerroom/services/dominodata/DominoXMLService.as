@@ -1,17 +1,20 @@
 package shinydesign.boilerroom.services.dominodata
 {
+	import images.ImageAsset;
+	
+	import mx.controls.Alert;
 	import mx.managers.CursorManager;
 	import mx.rpc.AsyncResponder;
 	import mx.rpc.AsyncToken;
 	import mx.rpc.Responder;
 	import mx.rpc.http.HTTPService;
+	import mx.utils.ObjectUtil;
 	
 	import org.robotlegs.mvcs.Actor;
 	
 	import shinydesign.boilerroom.model.ApplicationConfigModel;
 	import shinydesign.boilerroom.services.dominodata.IDominoXMLService;
-	import mx.controls.Alert;
-	import images.ImageAsset;
+	import shinydesign.boilerroom.utils.Logger;
 	
 	public class DominoXMLService extends Actor implements IDominoXMLService
 	{
@@ -22,6 +25,8 @@ package shinydesign.boilerroom.services.dominodata
 		public var applicationConfigModel:ApplicationConfigModel;
 		//We need the application config model as it will tell us where the endpoint is
 		
+		[Inject]
+		public var log:Logger; //For all logging
 		
 		public function get params():Object
 		{
@@ -44,15 +49,16 @@ package shinydesign.boilerroom.services.dominodata
 		}
 
 		public function getDominoData(EPKey:String=null):void
-		{trace("Service >> DominoData >> getDominoData >>" + EPKey);
+		{
+			log.debug("Service >> DominoData >> getDominoData >> EndPointKey >> " + EPKey);
 			//Add busy cursor
 			CursorManager.setBusyCursor();	
 			//Get EndPoint from value if passed - else from class property - else we can not continue
 			this.EndPointKey=EPKey;
 			var endURL:String;
 			endURL=	applicationConfigModel.applicationConfig.URLEndPoints.getValue(EPKey);
+			log.debug("Service >> DominoData >> getDominoData >> EndPointURL >> " + endURL);
 			
-			trace("EndPoint = "+endURL);
 			
 			//Attempt to login to the server
 			//Currently assume session based authentication
@@ -65,6 +71,8 @@ package shinydesign.boilerroom.services.dominodata
 				params.nocache=Math.round(Math.random()*1000);
 			//These will be posted  - values set via the command which has this service injected into it  
 			token = service.send(params);
+			//log.debug("Service >> DominoData >> getDominoData >> params >> " + ObjectUtil.toString(params));
+			
 			token.addResponder(responder);
 			
 		}
@@ -79,8 +87,8 @@ package shinydesign.boilerroom.services.dominodata
 		}
 		
 		public function handleServiceFault(event:Object,endPointKey:String):void
-		{	trace("ERROR for "+endPointKey+" -- "+event);
-			Alert.show("Problem getting data from server for endpoint: " + endPointKey + "\n\nPlease contact Systems for help","Failure",4,null,null,images.ImageAsset.FailureIcon);
+		{	log.error("Error - Service >> DominoData >> " + endPointKey + " >> " + event.fault.faultString);	
+			Alert.show("Problem getting data from server for endpoint: " + endPointKey + "\n\nPlease contact Systems for help\n\nError: " + event.fault.faultString,"Failure",4,null,null,images.ImageAsset.FailureIcon);
 			CursorManager.removeBusyCursor();
 			
 			

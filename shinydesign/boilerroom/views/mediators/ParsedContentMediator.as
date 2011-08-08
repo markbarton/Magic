@@ -1,13 +1,17 @@
 package shinydesign.boilerroom.views.mediators
 {
+	import images.ImageAsset;
+	
+	import mx.controls.Alert;
+	
 	import org.robotlegs.mvcs.Mediator;
 	
+	import shinydesign.boilerroom.model.vo.PostContent;
 	import shinydesign.boilerroom.signals.ContentProcessedSignal;
 	import shinydesign.boilerroom.signals.PostContentToServerSignal;
 	import shinydesign.boilerroom.signals.SendContentResultSignal;
+	import shinydesign.boilerroom.utils.Logger;
 	import shinydesign.boilerroom.views.contentparser.component.ParsedContent;
-	import mx.controls.Alert;
-	import images.ImageAsset;
 	
 	public class ParsedContentMediator extends Mediator
 	{
@@ -19,6 +23,10 @@ package shinydesign.boilerroom.views.mediators
 		public var postContentToServerSignal:PostContentToServerSignal;
 		[Inject]
 		public var sendContentResultSignal:SendContentResultSignal;
+		[Inject]
+		public var log:Logger; //For all logging
+		
+		public const PARSED_CONTENT="ParsedContent";
 		
 		override public function onRegister():void
 		{ 
@@ -36,8 +44,10 @@ package shinydesign.boilerroom.views.mediators
 			
 		}
 		
-		private function notifyResult(result:Boolean):void
+		private function notifyResult(result:Boolean,originID:String):void
 		{
+			trace("ParsedContentMediator >> notifyResult >> " +originID); 
+			if(originID==PARSED_CONTENT){
 			//change the button to display result;
 			if(result==true){
 				Alert.show("Content sent to Server OK","Success",4,null,null,images.ImageAsset.SuccessIcon);
@@ -47,11 +57,16 @@ package shinydesign.boilerroom.views.mediators
 				Alert.show("Content NOT sent to Server","Failure",4,null,null,images.ImageAsset.FailureIcon);
 				view.copyButton.label="Problem Sending Content..";				
 			}
+			}
 		}
 		
 		private function dispatchContentSignal(content:String):void
 		{
-			postContentToServerSignal.dispatch(content);
+			log.debug("ParsedContentMediator >> " + content);
+			var postContent:PostContent=new PostContent();
+			postContent.contentType=PARSED_CONTENT;
+			postContent.content=content;
+			postContentToServerSignal.dispatch(postContent);
 		}
 		
 		protected function contentUpdated(content:String):void{

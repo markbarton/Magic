@@ -1,6 +1,7 @@
 package shinydesign.boilerroom.services.dominodata
 {
 	import mx.managers.CursorManager;
+	import mx.utils.ObjectUtil;
 	
 	import shinydesign.boilerroom.model.TemplatesModel;
 	import shinydesign.boilerroom.model.vo.Rule;
@@ -21,14 +22,18 @@ package shinydesign.boilerroom.services.dominodata
 			super();
 		}
 		
+		[PostConstruct]
+		public function logStart():void{
+			log.debug("Service >> LoadAllTemplatesService Called");
+			
+		}
 		
 		//Implement the handleresult method as we want to use our specific parser
 		override public function handleServiceResult(event:Object,endPointKey:String):void
 		{
 			
 			CursorManager.removeBusyCursor();
-			trace("Service >> LoadAllTemplates");
-			
+				
 			for each(var obj:XML in event.result.template)
 			{
 				var template:Template=new Template();
@@ -43,6 +48,7 @@ package shinydesign.boilerroom.services.dominodata
 					rule.NOTEID=ruleObj.noteid;
 					rule.TextToFind=ruleObj.texttofind;
 					rule.TextToReplace=ruleObj.texttoreplace;
+					rule.RuleTitle=ruleObj.ruletitle;
 					if(ruleObj.casesensitive=="true")
 						rule.CaseSensitive=true;
 					else
@@ -78,16 +84,18 @@ package shinydesign.boilerroom.services.dominodata
 					rule.TruncateLength=parseFloat(ruleObj.truncatelength);
 					rule.TruncatePosition=ruleObj.truncateposition;
 					rule.TruncateReplace=ruleObj.truncatereplacestring;
-					
+					rule.Sequence=parseFloat(ruleObj.sequence);
 					
 					template.Rules.addItem(rule);
 				}
 				//Add to hashmap
 				templatesModel.Templates.put(template.UNID,template);
+				
 				//Add to unselected tenmplates
 				templatesModel.AddTemplate(template);
 			}
 			 
+			log.info("Service >> LoadAllTemplates >> Result");
 			
 		//Dispatch Signal indicating we have updated the templates model	
 			templatesLoaded.dispatch(templatesModel);

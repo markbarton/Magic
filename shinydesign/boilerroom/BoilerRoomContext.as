@@ -11,6 +11,7 @@ package shinydesign.boilerroom
 	import shinydesign.boilerroom.controller.LoadTourInfoCommand;
 	import shinydesign.boilerroom.controller.PostContentToServerCommand;
 	import shinydesign.boilerroom.controller.ProcessTemplatesCommand;
+	import shinydesign.boilerroom.controller.SendItineraryToServerCommand;
 	import shinydesign.boilerroom.controller.StartupCommand;
 	import shinydesign.boilerroom.controller.UpdateContentCommand;
 	import shinydesign.boilerroom.controller.UpdateSelectedTemplateCommand;
@@ -19,6 +20,7 @@ package shinydesign.boilerroom
 	import shinydesign.boilerroom.model.ProductsModel;
 	import shinydesign.boilerroom.model.TemplatesModel;
 	import shinydesign.boilerroom.model.ToursModel;
+	import shinydesign.boilerroom.model.vo.BrowserVariables;
 	import shinydesign.boilerroom.services.BrowserService;
 	import shinydesign.boilerroom.services.ConfigService;
 	import shinydesign.boilerroom.services.IBrowserService;
@@ -32,6 +34,7 @@ package shinydesign.boilerroom
 	import shinydesign.boilerroom.signals.ApplicationConfigLoadedSignal;
 	import shinydesign.boilerroom.signals.ApplicationStateChangeSignal;
 	import shinydesign.boilerroom.signals.BrowserIsReadySignal;
+	import shinydesign.boilerroom.signals.BrowserNameSetSignal;
 	import shinydesign.boilerroom.signals.ContentProcessedSignal;
 	import shinydesign.boilerroom.signals.ContentToBeParsedChangedSignal;
 	import shinydesign.boilerroom.signals.CurrentTourSetSignal;
@@ -45,15 +48,20 @@ package shinydesign.boilerroom
 	import shinydesign.boilerroom.signals.SelectedProductSignal;
 	import shinydesign.boilerroom.signals.SelectedTemplateSignal;
 	import shinydesign.boilerroom.signals.SendContentResultSignal;
+	import shinydesign.boilerroom.signals.SendItineraryToServerSignal;
 	import shinydesign.boilerroom.signals.TemplatesLoadedSignal;
 	import shinydesign.boilerroom.signals.TourInfoLoadedSignal;
 	import shinydesign.boilerroom.signals.ToursLoaded;
+	import shinydesign.boilerroom.utils.LogPanelTarget;
+	import shinydesign.boilerroom.utils.Logger;
+	import shinydesign.boilerroom.views.admin.LogPanel;
 	import shinydesign.boilerroom.views.contentparser.component.ContentToBeParsed;
 	import shinydesign.boilerroom.views.contentparser.component.ParsedContent;
 	import shinydesign.boilerroom.views.contentparser.component.Templates;
 	import shinydesign.boilerroom.views.contentparser.component.TemplatesTarget;
 	import shinydesign.boilerroom.views.mediators.BoilerRoomMediator;
 	import shinydesign.boilerroom.views.mediators.ContentToBeParsedMediator;
+	import shinydesign.boilerroom.views.mediators.LogPanelMediator;
 	import shinydesign.boilerroom.views.mediators.ParsedContentMediator;
 	import shinydesign.boilerroom.views.mediators.ProductContainerMediator;
 	import shinydesign.boilerroom.views.mediators.ProductListMediator;
@@ -88,8 +96,13 @@ package shinydesign.boilerroom
 			injector.mapSingleton(TemplatesModel);
 			injector.mapSingleton(ProductsModel);
 			injector.mapSingleton(ToursModel);
-			
+			injector.mapSingleton(BrowserVariables);
+			var logtmp:Logger=new Logger("shinydesign.boilerroom");
+			injector.mapValue(Logger,logtmp);
+			injector.mapSingleton(LogPanelTarget);
 			//injector.mapSingleton(CurrentUserLoaded);
+			injector.mapSingleton(BrowserNameSetSignal);
+			
 			injector.mapSingleton(TemplatesLoadedSignal);
 			injector.mapSingleton(ContentProcessedSignal);
 			injector.mapSingleton(SelectedTemplateSignal);
@@ -105,6 +118,8 @@ package shinydesign.boilerroom
 			injector.mapSingleton(TourInfoLoadedSignal);
 			injector.mapSingleton(ProductDataLoadedSignal);
 			injector.mapSingleton(ProductInfoLoadedSignal);
+			injector.mapSingleton(SendItineraryToServerSignal);
+			
 			//Commands
 			commandMap.mapEvent(ContextEvent.STARTUP,StartupCommand);
 			
@@ -118,7 +133,7 @@ package shinydesign.boilerroom
 			signalCommandMap.mapSignalClass(SelectedProductSignal,LoadProductCommand);
 			signalCommandMap.mapSignalClass(PostContentToServerSignal,PostContentToServerCommand);
 			signalCommandMap.mapSignalClass(CurrentTourSetSignal,LoadTourInfoCommand);
-			
+			signalCommandMap.mapSignalClass(SendItineraryToServerSignal,SendItineraryToServerCommand);
 			//views
 			mediatorMap.mapView(TopBannerControls,TopBannerMediator);
 			
@@ -131,7 +146,7 @@ package shinydesign.boilerroom
 			mediatorMap.mapView(ToursDataGrid,ToursDataGridMediator);
 			mediatorMap.mapView(TourInformation,TourInfoMediator);
 			mediatorMap.mapView(ProductContainer,ProductContainerMediator);
-			
+			mediatorMap.mapView(LogPanel,LogPanelMediator);
 			mediatorMap.mapView(BoilerRoom,BoilerRoomMediator);
 			
 			//Startup

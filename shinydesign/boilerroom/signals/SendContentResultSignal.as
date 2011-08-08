@@ -6,7 +6,7 @@ package shinydesign.boilerroom.signals
 	{
 		public function SendContentResultSignal()
 		{
-			super(Boolean);
+			super(Boolean,String);
 		}
 	}
 }

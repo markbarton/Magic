@@ -4,32 +4,41 @@
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
 		 xmlns:views="shinydesign.boilerroom.views.*" 
 		 xmlns:product="shinydesign.boilerroom.views.product.*"
-					  xmlns:components="shinydesign.boilerroom.views.components.*" xmlns:tours="shinydesign.boilerroom.views.product.tours.*">
+		 xmlns:components="shinydesign.boilerroom.views.components.*" xmlns:tours="shinydesign.boilerroom.views.product.tours.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<s:states>
 		<s:State  name="Normal" />
 		
-<s:State name="Tours"/>
+		<s:State name="Tours"/>
 		<s:State name="Hotels"/>
 	</s:states>
-	
+	<s:transitions>
+		<s:Transition fromState="*" toState="Tours" >
+			<s:Sequence>
+				<s:Fade  alphaFrom="0.0"  alphaTo="1.0" target="{toursData}" startDelay="300"/>	
+			</s:Sequence>
+		</s:Transition>
+		<s:Transition fromState="Tours" toState="*" >
+			<s:Sequence>
+				<s:Fade  alphaFrom="1.0"  alphaTo="0.0" target="{toursData}" startDelay="300"/>	
+			</s:Sequence>
+		</s:Transition>
+		</s:transitions>
 	<s:layout>
 		<s:VerticalLayout gap="0" paddingTop="0" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
 	</s:layout>	
 	<s:Scroller id="contentScroller" width="100%" height="100%" minWidth="0" minHeight="0">
-	<s:HGroup>
-		
-		<s:VGroup>
-		<product:ProductList includeIn="Normal,Tours,Hotels"/>	
-			<!--Product Data Grid is dependent on which Product is selected-->
-			<tours:ToursDataGrid id="toursData" width="650" height="100%" skinClass="shinydesign.boilerroom.views.components.ProductSelectionSkin" includeIn="Tours"/>
-		
-		</s:VGroup>
-	
-		
-	<tours:TourInformation  id="tourInformation" width="570" top="10" bottom="10" />	
-	</s:HGroup>
+		<s:HGroup>
+			
+			<s:VGroup>
+				<product:ProductList includeIn="Normal,Tours,Hotels"/>	
+				<!--Product Data Grid is dependent on which Product is selected-->
+				<tours:ToursDataGrid id="toursData" includeIn="Tours" LoadingTitle="Loading All Tours" currentState="LoadingData" width="650" height="100%"  skinClass="shinydesign.boilerroom.views.components.LoadingThrobberSkin" />
+			</s:VGroup>
+			
+			<tours:TourInformation  id="tourInformation" width="570"  LoadingTitle="Loading Tour Information" top="10" bottom="10" includeIn="Tours" skinClass="shinydesign.boilerroom.views.components.LoadingThrobberSkin"/>	
+		</s:HGroup>
 	</s:Scroller>
 </s:Group>
