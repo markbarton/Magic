@@ -38,6 +38,19 @@
 <Key>LoadTour</Key>
 <URL>tailormadetours.nsf/TourXML?openagent</URL>
 </EndPoint>
+<EndPoint>
+<Key>LoadAllHotels</Key>
+<URL>tailormadehotels.nsf/(XMLHotels)?openview&count=-1</URL>
+</EndPoint>
+<EndPoint>
+<Key>LoadHotel</Key>
+<URL>tailormadehotels.nsf/HotelXML?openagent</URL>
+</EndPoint>
+<EndPoint>
+<Key>CheckAllocation</Key>
+<URL>magic.nsf/CheckAllocation?openagent</URL>
+</EndPoint>
+
 
 </URLEndPoints>
 </config> 

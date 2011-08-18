@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%"  bottom="1" >
+	<fx:Script>
+		<![CDATA[
+			public var tmpSignal:Signal=new Signal;
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+			tmpSignal.dispatch(currentHotel.Description);
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import org.osflash.signals.Signal;
+			
+			import shinydesign.boilerroom.model.vo.Hotel;
+			[Bindable]
+			public var currentHotel:Hotel;
+			]]>
+	</fx:Script>
+	
+	
+		<s:HGroup height="100%" width="100%" paddingBottom="5"  paddingLeft="5" paddingRight="5" paddingTop="5">
+			
+	<s:VGroup height="100%" minWidth="250">
+		<s:Label color="#FFFFFF" fontSize="18" text="{currentHotel.HotelName}" />
+		<s:Label  color="#FFFFFF" fontSize="16"
+					  text="{currentHotel.Country}" />
+				<s:Label  color="#FFFFFF" fontSize="16"
+						  text="{currentHotel.Region}" />
+	
+		<s:Label color="#FFFFFF" fontSize="13"
+				 text="{currentHotel.StarRating}" />
+		<s:Label color="#FFFFFF" fontSize="13"
+				 text="{currentHotel.Board}" />
+		<s:Label color="#FFFFFF" fontSize="13"
+				 text="{currentHotel.Website}" />
+		<s:BitmapImage id="tourThumb" source="{currentHotel.Thumbnail}" left="5" />
+			
+	</s:VGroup>
+	
+	<s:VGroup height="100%" width="100%" gap="0">
+		<s:TabBar id="tabs"  dataProvider="{vs}"  />
+		
+		<mx:ViewStack id="vs"  height="100%" width="100%" minHeight="400">
+			<s:NavigatorContent width="100%" height="100%" label="Highlights"
+								contentBackgroundAlpha="0.0" contentBackgroundColor="#A31C1C">
+				<s:BorderContainer width="100%" height="100%" borderWeight="2" 
+								   cornerRadius="3" dropShadowVisible="true">
+					<s:backgroundFill>
+						<s:LinearGradient rotation="90">
+							<s:GradientEntry color="#454545" />
+							<s:GradientEntry color="0x818181" />
+						</s:LinearGradient>
+					</s:backgroundFill>
+					
+					
+					<s:Scroller left="1" right="1" top="1" bottom="1">
+						<s:Group >
+							<s:TextArea editable="false"  text="{currentHotel.Highlights}"
+										color="#FFFFFF" fontWeight="normal"  left="1" right="1" top="1" bottom="1" borderVisible="false"/>
+						</s:Group>
+					</s:Scroller>
+				</s:BorderContainer>
+			</s:NavigatorContent>
+			<s:NavigatorContent width="100%" height="100%" label="Description"
+								contentBackgroundAlpha="0.0" contentBackgroundColor="#A31C1C">
+				<s:BorderContainer width="100%" height="100%" borderWeight="2" 
+								   cornerRadius="3" dropShadowVisible="true">
+					<s:backgroundFill>
+						<s:LinearGradient rotation="90">
+							<s:GradientEntry color="#454545" />
+							<s:GradientEntry color="0x818181" />
+						</s:LinearGradient>
+					</s:backgroundFill>
+					
+					<s:Scroller left="1" right="1" top="1" bottom="1">
+						<s:Group >
+							<s:TextArea editable="false"  text="{currentHotel.Description}"
+										color="#FFFFFF"  left="1" right="1" top="30" bottom="1" borderVisible="false" />
+							<s:Button label="Send to Server" id="tourItineraryButton" click="button1_clickHandler(event)" top="5" left="5" />
+						</s:Group>
+					</s:Scroller>
+				</s:BorderContainer>
+			</s:NavigatorContent>
+			
+		</mx:ViewStack>
+	
+	</s:VGroup>
+			
+		</s:HGroup>
+		
+</s:Group>

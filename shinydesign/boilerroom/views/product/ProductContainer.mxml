@@ -1,44 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%"
 		 xmlns:views="shinydesign.boilerroom.views.*" 
 		 xmlns:product="shinydesign.boilerroom.views.product.*"
-		 xmlns:components="shinydesign.boilerroom.views.components.*" xmlns:tours="shinydesign.boilerroom.views.product.tours.*">
+		 xmlns:components="shinydesign.boilerroom.views.components.*" xmlns:tours="shinydesign.boilerroom.views.product.tours.*" 
+		 xmlns:container="shinydesign.boilerroom.views.components.container.*" xmlns:hotels="shinydesign.boilerroom.views.product.hotels.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import shinydesign.boilerroom.model.vo.LoadingFrame;
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				HotelsLoadingPane.loading=true;
+				
+			}
+		]]>
+	</fx:Script>
+	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<s:states>
 		<s:State  name="Normal" />
-		
 		<s:State name="Tours"/>
 		<s:State name="Hotels"/>
 	</s:states>
-	<s:transitions>
-		<s:Transition fromState="*" toState="Tours" >
-			<s:Sequence>
-				<s:Fade  alphaFrom="0.0"  alphaTo="1.0" target="{toursData}" startDelay="300"/>	
-			</s:Sequence>
-		</s:Transition>
-		<s:Transition fromState="Tours" toState="*" >
-			<s:Sequence>
-				<s:Fade  alphaFrom="1.0"  alphaTo="0.0" target="{toursData}" startDelay="300"/>	
-			</s:Sequence>
-		</s:Transition>
-		</s:transitions>
+	
 	<s:layout>
 		<s:VerticalLayout gap="0" paddingTop="0" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
 	</s:layout>	
 	<s:Scroller id="contentScroller" width="100%" height="100%" minWidth="0" minHeight="0">
-		<s:HGroup>
 			
-			<s:VGroup>
-				<product:ProductList includeIn="Normal,Tours,Hotels"/>	
+			<s:VGroup height="100%" width="100%">
+				<product:ProductList />	
 				<!--Product Data Grid is dependent on which Product is selected-->
-				<tours:ToursDataGrid id="toursData" includeIn="Tours" LoadingTitle="Loading All Tours" currentState="LoadingData" width="650" height="100%"  skinClass="shinydesign.boilerroom.views.components.LoadingThrobberSkin" />
+				
+				
+				<container:LoadingPane id="HotelsLoadingPane" loadingTitle="Loading Hotel Data" frameIdentifier="{LoadingFrame.FRAME_ALL_HOTELS}"
+											 skinClass="shinydesign.boilerroom.views.components.skin.LoadingPaneSkin" 
+											 includeIn="Hotels" left="5" right="5" height="100%" width="100%">
+					<hotels:HotelsDataGrid width="100%" height="100%" />
+				</container:LoadingPane>
+				
+				<container:LoadingPane loadingTitle="Loading Tour Data" 
+									   frameIdentifier="{LoadingFrame.FRAME_ALL_TOURS}"
+											skinClass="shinydesign.boilerroom.views.components.skin.LoadingPaneSkin" 
+											includeIn="Tours" left="5" right="5" height="100%" width="100%">
+					<tours:ToursDataGrid width="100%" height="100%" />
+				</container:LoadingPane>
+				
+			<container:LoadingPane includeIn="Tours" width="100%" bottom="0"  minHeight="430" loadingTitle="Loading Tour Information" 
+								   frameIdentifier="{LoadingFrame.FRAME_TOUR_INFO}"
+										   skinClass="shinydesign.boilerroom.views.components.skin.LoadingPaneSkin" >
+				<tours:TourInformation  id="tourInformation" width="100%" bottom="0"  />	
+			</container:LoadingPane>
+				<container:LoadingPane includeIn="Hotels" width="100%" bottom="0"  minHeight="430" loadingTitle="Loading Hotel Information" 
+									   frameIdentifier="{LoadingFrame.FRAME_HOTEL_INFO}"
+									   skinClass="shinydesign.boilerroom.views.components.skin.LoadingPaneSkin" >
+					<hotels:HotelInformation  id="hotelInformation" width="100%" bottom="0"  />	
+				</container:LoadingPane>
+				
 			</s:VGroup>
 			
-			<tours:TourInformation  id="tourInformation" width="570"  LoadingTitle="Loading Tour Information" top="10" bottom="10" includeIn="Tours" skinClass="shinydesign.boilerroom.views.components.LoadingThrobberSkin"/>	
-		</s:HGroup>
+		
 	</s:Scroller>
 </s:Group>

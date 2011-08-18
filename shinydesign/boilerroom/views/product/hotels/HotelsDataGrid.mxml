@@ -2,10 +2,12 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 >
+		>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
+	
+	
 	<fx:Script>
 		<![CDATA[
 				
@@ -16,7 +18,7 @@
 			import spark.components.Label;
 			import spark.events.TextOperationEvent;
 			public var tmpSignal:Signal=new Signal;
-			public var tourSelected:Signal=new Signal;
+			public var hotelSelected:Signal=new Signal;
 			//Used for the loading component;
 	
 			
@@ -26,26 +28,26 @@
 				tmpSignal.dispatch(search.text);
 			}
 			
-			protected function tours_changeHandler(event:ListEvent):void
+			protected function hotels_changeHandler(event:ListEvent):void
 			{
 				// TODO Auto-generated method stub
-				tourSelected.dispatch(event.currentTarget.selectedItem);
+				hotelSelected.dispatch(event.currentTarget.selectedItem);
 			}
 			
-		]]>
+				]]>
 	</fx:Script>
 	
-	
 
-	<s:VGroup paddingTop="10" paddingLeft="10" paddingRight="10" paddingBottom="10" id="dataGridHolder"  width="100%">
+	<s:VGroup paddingTop="10" paddingLeft="10" paddingRight="10" paddingBottom="10" id="dataGridHolder" width="100%">
 	<s:TextInput id="search" change="search_changeHandler(event)"/>	
-	<mx:DataGrid id="tours" width="100%"  rowCount="8" itemClick="tours_changeHandler(event)">
+	<mx:DataGrid id="hotels" width="100%" rowCount="8" itemClick="hotels_changeHandler(event)">
 		<mx:columns>
-			<mx:DataGridColumn dataField="Continent" headerText="Continent" width="200" />
 			<mx:DataGridColumn dataField="Country" headerText="Country" width="140" />
-			<mx:DataGridColumn dataField="Title" headerText="Title" />
-			<mx:DataGridColumn dataField="TourStyle" headerText="Tour Style" />
-			<mx:DataGridColumn dataField="Duration" headerText="Duration" />
+			<mx:DataGridColumn dataField="Region" headerText="Region" width="160" />
+			<mx:DataGridColumn dataField="HotelName" headerText="Name" />
+			<mx:DataGridColumn dataField="StarRating" headerText="Rating" width="80" />
+			<mx:DataGridColumn dataField="SupplierCode" headerText="Code" width="80" />
+			
 		</mx:columns>
 	</mx:DataGrid>
 	</s:VGroup>

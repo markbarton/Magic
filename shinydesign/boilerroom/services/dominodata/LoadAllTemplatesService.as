@@ -24,7 +24,7 @@ package shinydesign.boilerroom.services.dominodata
 		
 		[PostConstruct]
 		public function logStart():void{
-			log.debug("Service >> LoadAllTemplatesService Called");
+			logger.debug("Service >> LoadAllTemplatesService Called");
 			
 		}
 		
@@ -95,7 +95,7 @@ package shinydesign.boilerroom.services.dominodata
 				templatesModel.AddTemplate(template);
 			}
 			 
-			log.info("Service >> LoadAllTemplates >> Result");
+			logger.info("Service >> LoadAllTemplates >> Result");
 			
 		//Dispatch Signal indicating we have updated the templates model	
 			templatesLoaded.dispatch(templatesModel);

@@ -4,13 +4,14 @@ package shinydesign.boilerroom.utils
 	
 	import shinydesign.boilerroom.model.vo.Rule;
 	import shinydesign.boilerroom.model.vo.Template;
+	import shinydesign.boilerroom.signals.CheckAllocationSignal;
 	import shinydesign.boilerroom.signals.ContentProcessedSignal;
 
 	public class ProcessTemplates
 	{
 		public var contentProcessed:ContentProcessedSignal;
 		public var log:Logger; //For all logging
-		
+		public var checkAllocationSignal:CheckAllocationSignal; //Signal for checking the allocation
 		//Single Template for testing
 		private var _testTemplate:Template;
 		
@@ -202,6 +203,7 @@ package shinydesign.boilerroom.utils
 			var checkArray:Array=new Array();
 			var currentCharString:String;
 			var currentAsc:Number;
+			var checkRow:String;
 			//Loop through each word - check the total character length as we go
 			//if it exceeds the max length then add to sentance array and continue
 			
@@ -209,8 +211,27 @@ package shinydesign.boilerroom.utils
 				sentence="";
 				currentWord="";
 			currentSentance=sentanceSplit[i];
+			
+			///If first row we need to send back to magic.nsf to check for allocation
+			if(i==0 && checkAllocationSignal!=null){
+			checkRow=currentSentance;
+			var templateName:String="";
+			if(Templates.length!=0)
+			{
+				
+				for each(var obj:Object in Templates){
+					
+					templateName+=obj.Title + " ";
+				}
+			}
+			log.debug("Dispatching checkAllocationSignal >> " + templateName + checkRow);
+			//Dispatch signal to carry out check
+			checkAllocationSignal.dispatch(templateName + checkRow);
+			}
 			if(currentSentance.length<=maxLength){
-				if(currentSentance==""||currentSentance==" \n"||currentSentance=="\n"||currentSentance==" "||currentSentance=="\r")
+				if(currentSentance.length==1)
+					currentSentance="*";
+				else if(currentSentance==""||currentSentance==" \n"||currentSentance=="\n"||currentSentance==" "||currentSentance=="\r")
 					currentSentance="*";
 				//Sentance is shorter than max lenght so pad it with spaces
 				mySentences.push(padSentence(currentSentance));

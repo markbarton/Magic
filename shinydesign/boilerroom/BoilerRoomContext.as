@@ -3,10 +3,12 @@ package shinydesign.boilerroom
 	import org.robotlegs.base.ContextEvent;
 	import org.robotlegs.mvcs.SignalContext;
 	
+	import shinydesign.boilerroom.controller.CheckAllocationCommand;
 	import shinydesign.boilerroom.controller.LoadAllProductsCommand;
 	import shinydesign.boilerroom.controller.LoadAllTemplatesCommand;
 	import shinydesign.boilerroom.controller.LoadConfigCommand;
 	import shinydesign.boilerroom.controller.LoadCurrentUserCommand;
+	import shinydesign.boilerroom.controller.LoadHotelInfoCommand;
 	import shinydesign.boilerroom.controller.LoadProductCommand;
 	import shinydesign.boilerroom.controller.LoadTourInfoCommand;
 	import shinydesign.boilerroom.controller.PostContentToServerCommand;
@@ -17,6 +19,7 @@ package shinydesign.boilerroom
 	import shinydesign.boilerroom.controller.UpdateSelectedTemplateCommand;
 	import shinydesign.boilerroom.model.ApplicationConfigModel;
 	import shinydesign.boilerroom.model.CurrentUserModel;
+	import shinydesign.boilerroom.model.HotelsModel;
 	import shinydesign.boilerroom.model.ProductsModel;
 	import shinydesign.boilerroom.model.TemplatesModel;
 	import shinydesign.boilerroom.model.ToursModel;
@@ -25,21 +28,30 @@ package shinydesign.boilerroom
 	import shinydesign.boilerroom.services.ConfigService;
 	import shinydesign.boilerroom.services.IBrowserService;
 	import shinydesign.boilerroom.services.IConfigService;
+	import shinydesign.boilerroom.services.dominodata.CheckAllocationService;
+	import shinydesign.boilerroom.services.dominodata.LoadAllHotels;
 	import shinydesign.boilerroom.services.dominodata.LoadAllProducts;
 	import shinydesign.boilerroom.services.dominodata.LoadAllTemplatesService;
 	import shinydesign.boilerroom.services.dominodata.LoadAllToursService;
+	import shinydesign.boilerroom.services.dominodata.LoadHotelService;
 	import shinydesign.boilerroom.services.dominodata.LoadTourInformationService;
 	import shinydesign.boilerroom.services.dominodata.SendContentService;
 	import shinydesign.boilerroom.services.dominodata.user.CurrentUserService;
+	import shinydesign.boilerroom.signals.AllocationReturnSignal;
 	import shinydesign.boilerroom.signals.ApplicationConfigLoadedSignal;
 	import shinydesign.boilerroom.signals.ApplicationStateChangeSignal;
 	import shinydesign.boilerroom.signals.BrowserIsReadySignal;
 	import shinydesign.boilerroom.signals.BrowserNameSetSignal;
+	import shinydesign.boilerroom.signals.CheckAllocationSignal;
 	import shinydesign.boilerroom.signals.ContentProcessedSignal;
 	import shinydesign.boilerroom.signals.ContentToBeParsedChangedSignal;
+	import shinydesign.boilerroom.signals.CurrentHotelSetSignal;
 	import shinydesign.boilerroom.signals.CurrentTourSetSignal;
 	import shinydesign.boilerroom.signals.CurrentUserLoadedSignal;
 	import shinydesign.boilerroom.signals.DragStartedSignal;
+	import shinydesign.boilerroom.signals.HotelInfoLoadedSignal;
+	import shinydesign.boilerroom.signals.HotelsLoadedSignal;
+	import shinydesign.boilerroom.signals.LoadingFrameSignal;
 	import shinydesign.boilerroom.signals.PostContentToServerSignal;
 	import shinydesign.boilerroom.signals.ProcessContentSignal;
 	import shinydesign.boilerroom.signals.ProductDataLoadedSignal;
@@ -51,16 +63,20 @@ package shinydesign.boilerroom
 	import shinydesign.boilerroom.signals.SendItineraryToServerSignal;
 	import shinydesign.boilerroom.signals.TemplatesLoadedSignal;
 	import shinydesign.boilerroom.signals.TourInfoLoadedSignal;
-	import shinydesign.boilerroom.signals.ToursLoaded;
+	import shinydesign.boilerroom.signals.ToursLoadedSignal;
 	import shinydesign.boilerroom.utils.LogPanelTarget;
 	import shinydesign.boilerroom.utils.Logger;
 	import shinydesign.boilerroom.views.admin.LogPanel;
+	import shinydesign.boilerroom.views.components.container.LoadingPane;
 	import shinydesign.boilerroom.views.contentparser.component.ContentToBeParsed;
 	import shinydesign.boilerroom.views.contentparser.component.ParsedContent;
 	import shinydesign.boilerroom.views.contentparser.component.Templates;
 	import shinydesign.boilerroom.views.contentparser.component.TemplatesTarget;
 	import shinydesign.boilerroom.views.mediators.BoilerRoomMediator;
 	import shinydesign.boilerroom.views.mediators.ContentToBeParsedMediator;
+	import shinydesign.boilerroom.views.mediators.HotelInfoMediator;
+	import shinydesign.boilerroom.views.mediators.HotelsDataGridMediator;
+	import shinydesign.boilerroom.views.mediators.LoadingPaneMediator;
 	import shinydesign.boilerroom.views.mediators.LogPanelMediator;
 	import shinydesign.boilerroom.views.mediators.ParsedContentMediator;
 	import shinydesign.boilerroom.views.mediators.ProductContainerMediator;
@@ -72,6 +88,8 @@ package shinydesign.boilerroom
 	import shinydesign.boilerroom.views.mediators.ToursDataGridMediator;
 	import shinydesign.boilerroom.views.product.ProductContainer;
 	import shinydesign.boilerroom.views.product.ProductList;
+	import shinydesign.boilerroom.views.product.hotels.HotelInformation;
+	import shinydesign.boilerroom.views.product.hotels.HotelsDataGrid;
 	import shinydesign.boilerroom.views.product.tours.TourInformation;
 	import shinydesign.boilerroom.views.product.tours.ToursDataGrid;
 	import shinydesign.boilerroom.views.topbanner.TopBannerControls;
@@ -89,6 +107,10 @@ package shinydesign.boilerroom
 			injector.mapSingleton(LoadAllToursService);
 			injector.mapSingleton(SendContentService);
 			injector.mapSingleton(LoadTourInformationService);
+			injector.mapSingleton(LoadAllHotels);
+			injector.mapSingleton(LoadHotelService);
+			injector.mapSingleton(CheckAllocationService);
+			
 			
 			injector.mapSingleton(ApplicationConfigModel); //Model
 			//injector.mapSingleton(ApplicationConfigLoaded); //Signal
@@ -96,6 +118,8 @@ package shinydesign.boilerroom
 			injector.mapSingleton(TemplatesModel);
 			injector.mapSingleton(ProductsModel);
 			injector.mapSingleton(ToursModel);
+			injector.mapSingleton(HotelsModel);
+			
 			injector.mapSingleton(BrowserVariables);
 			var logtmp:Logger=new Logger("shinydesign.boilerroom");
 			injector.mapValue(Logger,logtmp);
@@ -110,7 +134,7 @@ package shinydesign.boilerroom
 			injector.mapSingleton(DragStartedSignal);
 			injector.mapSingleton(ProductsLoadedSignal);
 			injector.mapSingleton(ApplicationStateChangeSignal);
-			injector.mapSingleton(ToursLoaded);
+			injector.mapSingleton(ToursLoadedSignal);
 			injector.mapSingleton(SelectedProductSignal);
 			injector.mapSingleton(PostContentToServerSignal);
 			injector.mapSingleton(SendContentResultSignal);
@@ -119,6 +143,12 @@ package shinydesign.boilerroom
 			injector.mapSingleton(ProductDataLoadedSignal);
 			injector.mapSingleton(ProductInfoLoadedSignal);
 			injector.mapSingleton(SendItineraryToServerSignal);
+			injector.mapSingleton(HotelsLoadedSignal);
+			injector.mapSingleton(HotelInfoLoadedSignal);
+			injector.mapSingleton(LoadingFrameSignal);
+			injector.mapSingleton(CurrentHotelSetSignal);
+			injector.mapSingleton(AllocationReturnSignal);
+			injector.mapSingleton(CheckAllocationSignal);
 			
 			//Commands
 			commandMap.mapEvent(ContextEvent.STARTUP,StartupCommand);
@@ -133,7 +163,10 @@ package shinydesign.boilerroom
 			signalCommandMap.mapSignalClass(SelectedProductSignal,LoadProductCommand);
 			signalCommandMap.mapSignalClass(PostContentToServerSignal,PostContentToServerCommand);
 			signalCommandMap.mapSignalClass(CurrentTourSetSignal,LoadTourInfoCommand);
+			signalCommandMap.mapSignalClass(CurrentHotelSetSignal,LoadHotelInfoCommand);
 			signalCommandMap.mapSignalClass(SendItineraryToServerSignal,SendItineraryToServerCommand);
+			signalCommandMap.mapSignalClass(CheckAllocationSignal,CheckAllocationCommand);
+			
 			//views
 			mediatorMap.mapView(TopBannerControls,TopBannerMediator);
 			
@@ -144,9 +177,14 @@ package shinydesign.boilerroom
 			//Products
 			mediatorMap.mapView(ProductList,ProductListMediator);
 			mediatorMap.mapView(ToursDataGrid,ToursDataGridMediator);
+			
 			mediatorMap.mapView(TourInformation,TourInfoMediator);
 			mediatorMap.mapView(ProductContainer,ProductContainerMediator);
 			mediatorMap.mapView(LogPanel,LogPanelMediator);
+			mediatorMap.mapView(HotelsDataGrid,HotelsDataGridMediator);
+			mediatorMap.mapView(LoadingPane,LoadingPaneMediator,null,true,false);
+			mediatorMap.mapView(HotelInformation,HotelInfoMediator);
+			
 			mediatorMap.mapView(BoilerRoom,BoilerRoomMediator);
 			
 			//Startup

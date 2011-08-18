@@ -2,21 +2,22 @@ package shinydesign.boilerroom.views.mediators
 {
 	import org.robotlegs.mvcs.Mediator;
 	
-	import shinydesign.boilerroom.model.ToursModel;
-		import shinydesign.boilerroom.model.vo.Tour;
-		import shinydesign.boilerroom.signals.ToursLoadedSignal;
-	import shinydesign.boilerroom.views.product.tours.ToursDataGrid;
+	import shinydesign.boilerroom.model.HotelsModel;
+	import shinydesign.boilerroom.model.vo.Hotel;
+	import shinydesign.boilerroom.signals.HotelsLoadedSignal;
+	import shinydesign.boilerroom.views.product.hotels.HotelsDataGrid;
 	
-	public class ToursDataGridMediator extends Mediator
+	public class HotelsDataGridMediator extends Mediator
 	{
-		[Inject]
-		public var view:ToursDataGrid;
 		
 		[Inject]
-		public var toursLoadedSignal:ToursLoadedSignal;
+		public var view:HotelsDataGrid;
 		
 		[Inject]
-		public var toursModel:ToursModel;
+		public var hotelsLoadedSignal:HotelsLoadedSignal;
+		
+		[Inject]
+		public var hotelsModel:HotelsModel;
 		
 		private var searchText:String;
 		
@@ -24,38 +25,39 @@ package shinydesign.boilerroom.views.mediators
 		{ 
 			//Listen for the search signal to perform filter
 			view.tmpSignal.add(doFilter);
-			view.tourSelected.add(setSelectedTour);
+			view.hotelSelected.add(setSelectedHotel);
 			
 			//Attach to the toursloaded signal
-			toursLoadedSignal.add(updateView);
+			hotelsLoadedSignal.add(updateView);
 			
 			//If the model already has tours loaded update the view
-			if(toursModel.Tours.length!=0)
-				updateView(toursModel);
+			if(hotelsModel.Hotels.length!=0)
+				updateView(hotelsModel);
 		}
 		
 		
-		private function updateView(toursModel:ToursModel):void
+		private function updateView(hotelsModel:HotelsModel):void
 		{	
-				view.tours.dataProvider=toursModel.Tours;	
+		//Dispatch Hotels Loaded Signal so Loading Component will change from loading to loaded	
+			view.hotels.dataProvider=hotelsModel.Hotels;	
+			
 		}
-		
-		private function setSelectedTour(selectedTour:Tour):void{
+		private function setSelectedHotel(selectedHotel:Hotel):void{
 			//setting the current tour on the model should be enough as the model will dispatch its own signal
-			toursModel.CurrentTour=selectedTour;
+			hotelsModel.CurrentHotel=selectedHotel;
+			
 		}
-		
 		private function doFilter(searchText:String):void{ 
 			//Set the filter function on data provider
 			this.searchText=searchText;
-			toursModel.Tours.filterFunction=processFilter;
-			toursModel.Tours.refresh();
+			hotelsModel.Hotels.filterFunction=processFilter;
+			hotelsModel.Hotels.refresh();
 		}
 		
 		//Filter function
 		private function processFilter(item:Object):Boolean {
 			var matched:Boolean=false;
-			var fieldNames:Array=["Continent","Country","Title","TourStyle","Duration"];
+			var fieldNames:Array=["Country","Town","HotelName","StarRating","SupplierCode"];
 			//Needs to be a visible item rather than any other additional values which are in the VO
 			for each(var id:String in fieldNames) {
 				var value:Object = item[id];

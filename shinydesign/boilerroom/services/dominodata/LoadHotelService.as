@@ -2,23 +2,24 @@ package shinydesign.boilerroom.services.dominodata
 {
 	import mx.managers.CursorManager;
 	
+	import shinydesign.boilerroom.model.HotelsModel;
 	import shinydesign.boilerroom.model.ToursModel;
+	import shinydesign.boilerroom.model.vo.Hotel;
 	import shinydesign.boilerroom.model.vo.Tour;
+	import shinydesign.boilerroom.signals.HotelInfoLoadedSignal;
 	import shinydesign.boilerroom.signals.ProductInfoLoadedSignal;
 	import shinydesign.boilerroom.signals.TourInfoLoadedSignal;
 
-	public class LoadTourInformationService extends DominoXMLService implements IDominoXMLService
+	public class LoadHotelService extends DominoXMLService implements IDominoXMLService
 	{
 		[Inject]
-		public var toursModel:ToursModel;
+		public var hotelsModel:HotelsModel;
 	
 		[Inject]
-		public var tourInfoLoadedSignal:TourInfoLoadedSignal;
+		public var hotelInfoLoadedSignal:HotelInfoLoadedSignal;
 		
-		[Inject]
-		public var productInfoLoadedSignal:ProductInfoLoadedSignal; //Generic ProductInfo Signal
 		
-		private var currentTour:Tour;
+		private var currentHotel:Hotel;
 		
 		//Implement the handleresult method as we want to use our specific parser
 		override public function handleServiceResult(event:Object,endPointKey:String):void
@@ -26,41 +27,40 @@ package shinydesign.boilerroom.services.dominodata
 			
 			CursorManager.removeBusyCursor();
 			trace("Service >> LoadTour");
-			currentTour=toursModel.CurrentTour;
+			currentHotel=hotelsModel.CurrentHotel;
 			for each(var obj:XML in event.result)
 			{
-				currentTour.Thumbnail=obj.thumbnail;
-				currentTour.MainImage=obj.mainimage;
-				currentTour.Intro=obj.intro;
-				currentTour.TourStyle=obj.tourstyle;
-				currentTour.Itinerary=obj.itinerary;
-				currentTour.Inclusions=obj.inclusions;
-				currentTour.Extras=obj.extras;
-				currentTour.StartPoint=obj.startpoint;
-				currentTour.Duration=obj.duration;
+				currentHotel.Thumbnail=obj.thumbnail;
+				currentHotel.Website=obj.website;
+				currentHotel.Board=obj.board;
 				var tmpArray:Array=obj.highlights.split("\n");
 				var tmpOut:String="";
 				for(var i:Number=0;i<tmpArray.length;i++){
-				if(tmpOut=="")
-					tmpOut+="*"+tmpArray[i];	
-				else
-					tmpOut+=" *"+tmpArray[i];	
+					if(tmpOut=="")
+						tmpOut+=tmpArray[i];	
+					else
+						tmpOut+=" *"+tmpArray[i];	
 					
 				}
+				currentHotel.Highlights=replaceString(tmpOut,"\r","");
 				
-				currentTour.Highlights=replaceString(tmpOut,"\r","");
-				currentTour.AUD=obj.aud;
-				currentTour.EUR=obj.eur;
-				currentTour.GBP=obj.gbp;
+				tmpArray=obj.description.split("\n");
+				tmpOut="";
+				for(i=0;i<tmpArray.length;i++){
+					if(tmpOut=="")
+						tmpOut+=tmpArray[i];	
+					else
+						tmpOut+=" *"+tmpArray[i];	
+					
+				}
+				currentHotel.Description=replaceString(tmpOut,"\r","");
+					
 			}
-			
-			//Dspatch Generic Signal
-			productInfoLoadedSignal.dispatch();
-			//Dispatch Signal indicating we have updated the products model	
-			tourInfoLoadedSignal.dispatch(currentTour);
+			logger.debug(currentHotel.Thumbnail);
+			hotelInfoLoadedSignal.dispatch(currentHotel);
 			super.handleServiceResult(event,endPointKey);
 		}
-	
+		
 		public function replaceString(str:String, find:String, replace:String):String {
 			var startIndex:Number = 0;
 			var oldIndex:Number = 0;

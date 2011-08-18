@@ -13,20 +13,37 @@ package shinydesign.boilerroom.services.dominodata
 	import org.robotlegs.mvcs.Actor;
 	
 	import shinydesign.boilerroom.model.ApplicationConfigModel;
+	import shinydesign.boilerroom.model.vo.LoadingFrame;
 	import shinydesign.boilerroom.services.dominodata.IDominoXMLService;
+	import shinydesign.boilerroom.signals.LoadingFrameSignal;
 	import shinydesign.boilerroom.utils.Logger;
 	
 	public class DominoXMLService extends Actor implements IDominoXMLService
 	{
 		private var _EndPointKey:String;
 		private var _params:Object=new Object;
+		private var _frameIdentifier:String;
+		private var loadingFrame:LoadingFrame=new LoadingFrame();
+		public function get frameIdentifier():String
+		{
+			return _frameIdentifier;
+		}
+
+		public function set frameIdentifier(value:String):void
+		{
+			_frameIdentifier = value;
+		}
+
 		
 		[Inject]
 		public var applicationConfigModel:ApplicationConfigModel;
 		//We need the application config model as it will tell us where the endpoint is
 		
 		[Inject]
-		public var log:Logger; //For all logging
+		public var logger:Logger; //For all logging
+		
+		[Inject]
+		public var loadingFrameSignal:LoadingFrameSignal; //Used to dispatch when something is loaded / loaded for the loading frame components
 		
 		public function get params():Object
 		{
@@ -50,14 +67,15 @@ package shinydesign.boilerroom.services.dominodata
 
 		public function getDominoData(EPKey:String=null):void
 		{
-			log.debug("Service >> DominoData >> getDominoData >> EndPointKey >> " + EPKey);
+			logger.debug("Service >> DominoData >> getDominoData >> EndPointKey >> " + EPKey);
+			updateLoadingFrame(loadingFrame.LOADING_STATE);
 			//Add busy cursor
 			CursorManager.setBusyCursor();	
 			//Get EndPoint from value if passed - else from class property - else we can not continue
 			this.EndPointKey=EPKey;
 			var endURL:String;
 			endURL=	applicationConfigModel.applicationConfig.URLEndPoints.getValue(EPKey);
-			log.debug("Service >> DominoData >> getDominoData >> EndPointURL >> " + endURL);
+			logger.debug("Service >> DominoData >> getDominoData >> EndPointURL >> " + endURL);
 			
 			
 			//Attempt to login to the server
@@ -77,20 +95,29 @@ package shinydesign.boilerroom.services.dominodata
 			
 		}
 		
+		public function updateLoadingFrame(state:String):void{
+			//Dispatch loading frame signal with loading frame VO set with correct properties
+		
+			loadingFrame.frameIdentifier=this.frameIdentifier;
+			loadingFrame.state=state;
+			loadingFrameSignal.dispatch(loadingFrame);
+			logger.debug("Dispatched Loading Frame Signal : " + this.frameIdentifier + " with state: " + loadingFrame.LOADING_STATE);
+		}
+		
 		public function handleServiceResult(event:Object,endPointKey:String):void
-		{
-			CursorManager.removeBusyCursor();
-			//Parse the data and then broadcast so the model can be updated with the VO
-			trace(event.result.DOCUMENT);
-			
-			
+		{	
+		updateLoadingFrame(loadingFrame.DATA_LOADED);	
 		}
 		
 		public function handleServiceFault(event:Object,endPointKey:String):void
-		{	log.error("Error - Service >> DominoData >> " + endPointKey + " >> " + event.fault.faultString);	
+		{	logger.error("Error - Service >> DominoData >> " + endPointKey + " >> " + event.fault.faultString);	
 			Alert.show("Problem getting data from server for endpoint: " + endPointKey + "\n\nPlease contact Systems for help\n\nError: " + event.fault.faultString,"Failure",4,null,null,images.ImageAsset.FailureIcon);
 			CursorManager.removeBusyCursor();
-			
+			//Dispatch an error loading Frame State
+			var loadingFrame:LoadingFrame=new LoadingFrame();
+			loadingFrame.frameIdentifier=this.frameIdentifier;
+			loadingFrame.state=loadingFrame.DATA_ERROR;
+			loadingFrameSignal.dispatch(loadingFrame);
 			
 		}
 	}

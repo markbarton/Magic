@@ -4,11 +4,15 @@ package shinydesign.boilerroom.model
 	
 	import shinydesign.boilerroom.model.vo.Product;
 	import shinydesign.boilerroom.signals.SelectedProductSignal;
+	import shinydesign.boilerroom.utils.Logger;
 
 	public class ProductsModel
 	{
 		[Inject]
 		public var selectedProductSignal:SelectedProductSignal;
+		
+		[Inject]
+		public var logger:Logger;
 		
 		private var _CurrentProduct:Product;
 		private var _Products:ArrayCollection=new ArrayCollection();
@@ -32,7 +36,7 @@ package shinydesign.boilerroom.model
 		{
 			_CurrentProduct = value;
 			//dispatch signal
-			trace("dispatching Product set signal");
+			logger.debug("Products Model >> Dispatching Product Set Signal");
 			selectedProductSignal.dispatch(value);
 		}
 

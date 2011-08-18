@@ -7,6 +7,7 @@ package shinydesign.boilerroom.views.mediators
 	import org.robotlegs.mvcs.Mediator;
 	
 	import shinydesign.boilerroom.model.vo.PostContent;
+	import shinydesign.boilerroom.signals.AllocationReturnSignal;
 	import shinydesign.boilerroom.signals.ContentProcessedSignal;
 	import shinydesign.boilerroom.signals.PostContentToServerSignal;
 	import shinydesign.boilerroom.signals.SendContentResultSignal;
@@ -25,8 +26,10 @@ package shinydesign.boilerroom.views.mediators
 		public var sendContentResultSignal:SendContentResultSignal;
 		[Inject]
 		public var log:Logger; //For all logging
+		[Inject]
+		public var allocationReturnSignal:AllocationReturnSignal;
 		
-		public const PARSED_CONTENT="ParsedContent";
+		public const PARSED_CONTENT:String="ParsedContent";
 		
 		override public function onRegister():void
 		{ 
@@ -35,6 +38,22 @@ package shinydesign.boilerroom.views.mediators
 			
 			contentProcessed.add(contentUpdated);
 			sendContentResultSignal.add(notifyResult);
+			allocationReturnSignal.add(warnAllocation);
+		}
+		
+		private function warnAllocation(warning:String):void
+		{
+			// TODO Auto Generated method stub
+			if(warning!="false"){
+				view.warningText="Allocation Warning (" + warning + ")";
+				view.warningColor=returnAllocationColor(warning);
+				
+			//view.AllocationWarning.text="Allocation Warning (" + warning + ")";
+			//view.AllocationWarning.setStyle("color",returnAllocationColor(warning));
+			}
+			else{
+			view.warningText="";
+			}
 		}
 		
 		override public function onRemove():void{
@@ -74,6 +93,23 @@ package shinydesign.boilerroom.views.mediators
 			view.ParsedContentContainer.text=content;
 			view.copyButton.visible=true;
 			view.colorEffect.play();
+		}
+		private function returnAllocationColor(warning:String):uint{
+			var returnVal:uint;
+			
+			if(warning=="Allocation")
+				returnVal=0xff0000;
+			if(warning=="Irish Allocation")
+				returnVal=0x007658;
+			if(warning=="Warning")
+				returnVal=0xff00e4;
+			if(warning=="Advertised Allocation")
+				returnVal=0x000fff;
+			if(warning=="Magazine Allocation")
+				returnVal=0xf20fff;
+				
+			return returnVal;
+			
 		}
 	}
 }

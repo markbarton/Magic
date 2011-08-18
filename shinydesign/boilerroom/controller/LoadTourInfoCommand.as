@@ -2,6 +2,7 @@ package shinydesign.boilerroom.controller
 {
 	import org.robotlegs.mvcs.SignalCommand;
 	
+	import shinydesign.boilerroom.model.vo.LoadingFrame;
 	import shinydesign.boilerroom.model.vo.Tour;
 	import shinydesign.boilerroom.services.dominodata.LoadTourInformationService;
 	import shinydesign.boilerroom.signals.CurrentTourSetSignal;
@@ -17,6 +18,7 @@ package shinydesign.boilerroom.controller
 		{
 			trace("Command >> Load Tour Information Command Called");
 			service.params.key=currentTour.UNID;
+			service.frameIdentifier=LoadingFrame.FRAME_TOUR_INFO;
 			service.getDominoData("LoadTour");
 		}
 	

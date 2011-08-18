@@ -6,38 +6,33 @@ package shinydesign.boilerroom.views.mediators
 	
 	import org.robotlegs.mvcs.Mediator;
 	
-	import shinydesign.boilerroom.model.ToursModel;
+	import shinydesign.boilerroom.model.HotelsModel;
+	import shinydesign.boilerroom.model.vo.Hotel;
 	import shinydesign.boilerroom.model.vo.PostContent;
-	import shinydesign.boilerroom.model.vo.Product;
 	import shinydesign.boilerroom.model.vo.Tour;
-	import shinydesign.boilerroom.signals.CurrentTourSetSignal;
+	import shinydesign.boilerroom.signals.CurrentHotelSetSignal;
+	import shinydesign.boilerroom.signals.HotelInfoLoadedSignal;
 	import shinydesign.boilerroom.signals.PostContentToServerSignal;
-	import shinydesign.boilerroom.signals.SelectedProductSignal;
 	import shinydesign.boilerroom.signals.SendContentResultSignal;
-	import shinydesign.boilerroom.signals.SendItineraryToServerSignal;
-	import shinydesign.boilerroom.signals.TourInfoLoadedSignal;
 	import shinydesign.boilerroom.utils.Logger;
 	import shinydesign.boilerroom.utils.ProcessTemplates;
-	import shinydesign.boilerroom.views.product.tours.TourInformation;
-
-	public class TourInfoMediator extends Mediator
+	import shinydesign.boilerroom.views.product.hotels.HotelInformation;
+	
+	public class HotelInfoMediator extends Mediator
 	{
 		
 		[Inject]
-		public var view:TourInformation;
+		public var view:HotelInformation;
 		
 		[Inject]
-		public var tourInfoLoadedSignal:TourInfoLoadedSignal;
+		public var hotelInfoLoadedSignal:HotelInfoLoadedSignal;
 		
 		[Inject]
-		public var toursModel:ToursModel;
+		public var hotelsModel:HotelsModel;
 		
 		[Inject]
-		public var currentTourSet:CurrentTourSetSignal;
-		
-		[Inject]
-		public var selectedProductSignal:SelectedProductSignal; //Listen for when a product button has changed the selected product so we can hide the current data while waiting for new stuff
-		
+		public var currentHotelSet:CurrentHotelSetSignal;
+			
 		[Inject]
 		public var postContentToServerSignal:PostContentToServerSignal;
 		
@@ -47,7 +42,7 @@ package shinydesign.boilerroom.views.mediators
 		[Inject]
 		public var log:Logger;
 		
-		public const TOUR_ITINERARY:String="TourItinerary";
+		public const HOTEL_DESCRIPTION:String="HotelDescription";
 		
 		override public function onRegister():void
 		{ 
@@ -58,9 +53,9 @@ package shinydesign.boilerroom.views.mediators
 			
 			//	currentTourSet.add(clearViewTour);
 			
-			tourInfoLoadedSignal.add(updateView); //clear when a tour is initially selected
-			if(toursModel.CurrentTour!=null)
-				updateView(toursModel.CurrentTour);
+			hotelInfoLoadedSignal.add(updateView); //clear when a hotel is initially selected
+			if(hotelsModel.CurrentHotel!=null)
+				updateView(hotelsModel.CurrentHotel);
 			
 			sendContentResultSignal.add(notifyResult);
 			
@@ -68,24 +63,24 @@ package shinydesign.boilerroom.views.mediators
 		
 		override public function onRemove():void{
 			view.tmpSignal.remove(sendItineraryToServer);
-			currentTourSet.remove(clearViewTour);
-			tourInfoLoadedSignal.remove(updateView);
+			currentHotelSet.remove(clearViewTour);
+			hotelInfoLoadedSignal.remove(updateView);
 			sendContentResultSignal.remove(notifyResult);
 			
 		}
 		
 		
-		private function clearViewTour(tour:Tour):void{
+		private function clearViewTour(hotel:Hotel):void{
 			//Each signal that triggers this has different payloads which we are not interested in hence the ...
 			if(view!=null){
-				view.currentTour=tour;		
+				view.currentHotel=hotel;		
 			}
 			
 		}
 		
-		private function updateView(currentTour:Tour):void
+		private function updateView(currentHotel:Hotel):void
 		{
-				view.currentTour=currentTour;
+				view.currentHotel=currentHotel;
 		}
 		
 		private function sendItineraryToServer(content:String):void{
@@ -94,14 +89,14 @@ package shinydesign.boilerroom.views.mediators
 			var processTemplates:ProcessTemplates=new ProcessTemplates();
 			processTemplates.log=log;
 			postContent.content=processTemplates.processStandard(content);
-			postContent.contentType=TOUR_ITINERARY;
+			postContent.contentType=HOTEL_DESCRIPTION;
 			postContentToServerSignal.dispatch(postContent);
 			
 		}
 		
 		private function notifyResult(result:Boolean,originID:String):void
 		{
-			if(originID==TOUR_ITINERARY){
+			if(originID==HOTEL_DESCRIPTION){
 			//change the button to display result;
 			if(result==true){
 				Alert.show("Content sent to Server OK","Success",4,null,null,images.ImageAsset.SuccessIcon);

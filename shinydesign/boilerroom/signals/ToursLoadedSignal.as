@@ -4,9 +4,9 @@ package shinydesign.boilerroom.signals
 	
 	import shinydesign.boilerroom.model.ToursModel;
 	
-	public class ToursLoaded extends Signal
+	public class ToursLoadedSignal extends Signal
 	{
-		public function ToursLoaded()
+		public function ToursLoadedSignal()
 		{
 			super(ToursModel);
 		}

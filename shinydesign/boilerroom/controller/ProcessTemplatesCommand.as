@@ -6,6 +6,7 @@ package shinydesign.boilerroom.controller
 	
 	import shinydesign.boilerroom.model.TemplatesModel;
 	import shinydesign.boilerroom.model.vo.Template;
+	import shinydesign.boilerroom.signals.CheckAllocationSignal;
 	import shinydesign.boilerroom.signals.ContentProcessedSignal;
 	import shinydesign.boilerroom.utils.Logger;
 	import shinydesign.boilerroom.utils.ProcessTemplates;
@@ -20,6 +21,10 @@ package shinydesign.boilerroom.controller
 		
 		[Inject]
 		public var log:Logger; //For all logging
+		
+		[Inject]
+		public var checkAllocationSignal:CheckAllocationSignal;
+		
 		//Call the process template class
 		override public function execute():void
 		{
@@ -28,6 +33,7 @@ package shinydesign.boilerroom.controller
 			//Inject Signal here
 			process.contentProcessed=contentProcessed;
 			process.log=log;
+			process.checkAllocationSignal=this.checkAllocationSignal;
 			process.Templates=templatesModel.SelectedTemplateList;
 			process.processContentWithSignal(templatesModel.Content);
 			

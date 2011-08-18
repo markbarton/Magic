@@ -21,14 +21,13 @@
 			{
 				if(event.target.selectedItem!=null)
 				tmpSignal.dispatch(event.target.selectedItem as Product);
-				
 			}
 			
 		]]>
 	</fx:Script>
 	
 	
-	<s:ButtonBar  requireSelection="true" id="Products" labelField="ProductName" change="Products_changeHandler(event)" skinClass="shinydesign.boilerroom.views.product.ProductListSkin" />
+	<s:ButtonBar  requireSelection="false" id="Products" labelField="ProductName" change="Products_changeHandler(event)" skinClass="shinydesign.boilerroom.views.product.ProductListSkin" />
 	
 	
 	

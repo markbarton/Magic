@@ -9,7 +9,29 @@
 			import org.osflash.signals.Signal;
 			
 			public var tmpSignal:Signal=new Signal();
-			
+			private  var _warningText:String;
+			private var _warningColor:uint;
+
+			public function get warningColor():uint
+			{
+				return _warningColor;
+			}
+			[Bindable]
+			public function set warningColor(value:uint):void
+			{
+				_warningColor = value;
+			}
+
+			public function get warningText():String
+			{
+				return _warningText;
+			}
+			[Bindable]
+			public function set warningText(value:String):void
+			{
+				_warningText = value;
+			}
+
 			protected function button1_clickHandler(event:MouseEvent):void
 			{
 				//Dispatch Signal to mediator that user wants content posted to server

@@ -3,7 +3,10 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   xmlns:context="shinydesign.boilerroom.*"
-			   xmlns:views="shinydesign.boilerroom.views.*" xmlns:components="shinydesign.boilerroom.views.components.*" xmlns:contentparser="shinydesign.boilerroom.views.contentparser.*" xmlns:topbanner="shinydesign.boilerroom.views.topbanner.*" xmlns:product="shinydesign.boilerroom.views.product.*" xmlns:admin="shinydesign.boilerroom.views.admin.*" >
+			   xmlns:views="shinydesign.boilerroom.views.*" 
+			   xmlns:components="shinydesign.boilerroom.views.components.*" 
+			   height="100%"
+			   xmlns:contentparser="shinydesign.boilerroom.views.contentparser.*" xmlns:topbanner="shinydesign.boilerroom.views.topbanner.*" xmlns:product="shinydesign.boilerroom.views.product.*" xmlns:admin="shinydesign.boilerroom.views.admin.*" >
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<context:BoilerRoomContext contextView="{this}"/>
@@ -113,9 +116,10 @@
 	 
 	
 	<topbanner:TopBannerControls styleName="topBanner"  includeIn="ContentParser, ProductInformation, Admin"/>
-	<s:VGroup gap="20" paddingTop="5" top="65" paddingLeft="5" paddingRight="5" paddingBottom="5">
+	<s:VGroup height="100%" width="100%" top="63" bottom="0">
+		
 	<contentparser:ContentParserContainer includeIn="ContentParser" id="contentParser"  />
-	<product:ProductContainer includeIn="ProductInformation" id="productList"/>
+	<product:ProductContainer includeIn="ProductInformation" id="productList" height="100%"/>
 	<admin:LogPanel id="adminPanel" includeIn="Admin" />
 	</s:VGroup>
 	

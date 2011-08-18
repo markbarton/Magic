@@ -29,7 +29,7 @@ in accordance with the terms of the license agreement accompanying it.
         /** 
          * @copy spark.skins.spark.ApplicationSkin#hostComponent
          */
-        [HostComponent("spark.components.Panel")]
+        [HostComponent("shinydesign.boilerroom.views.contentparser.component.ParsedContent")]
         ]]>
     </fx:Metadata> 
     
@@ -232,11 +232,20 @@ in accordance with the terms of the license agreement accompanying it.
                 
                 <!-- layer 3: text -->
 				<!--- @copy spark.components.Panel#titleDisplay -->
-				<s:BitmapImage source="{images.ImageAsset.ClipboardIcon}" top="5" left="5"/>
+				<s:HGroup width="100%" height="100%" verticalAlign="middle" paddingLeft="5" paddingRight="5">
+					
+				<s:BitmapImage source="{images.ImageAsset.ClipboardIcon}" height="16"/>
 				<s:Label id="titleDisplay" maxDisplayedLines="1"
-						 left="25" right="3" top="1" bottom="0" minHeight="30"
+						  top="1" bottom="0" minHeight="30"
 						 verticalAlign="middle" textAlign="start" fontWeight="bold">
 				</s:Label>
+					<s:Label id="allocationWarning" maxDisplayedLines="1" textAlign="right" width="100%"
+							  top="1" bottom="0" minHeight="30" text="{hostComponent.warningText}" color="{hostComponent.warningColor}"
+							 verticalAlign="middle" fontWeight="bold">
+					</s:Label>
+					
+				</s:HGroup>
+				
             </s:Group>
             
             <!--

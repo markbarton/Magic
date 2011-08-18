@@ -27,7 +27,7 @@ package shinydesign.boilerroom.services.dominodata.user
 		
 		[PostConstruct]
 		public function logStart():void{
-			log.debug("Service >> CurrentUserService Called");
+			logger.debug("Service >> CurrentUserService Called");
 				
 		}
 		
@@ -53,7 +53,7 @@ package shinydesign.boilerroom.services.dominodata.user
 				currentUserModel.currentUser=currentUser;
 				//Dispatch Event indicating model has been updated
 				//dispatch(new UserEvent(UserEvent.USER_MODEL_UPDATED));
-				log.info("Service >> CurrentUserService >> Result");
+				logger.info("Service >> CurrentUserService >> Result");
 					
 				currentUserLoaded.dispatch(); //dispatch signal
 	}
