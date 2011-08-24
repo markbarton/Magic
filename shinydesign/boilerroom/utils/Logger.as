@@ -40,9 +40,13 @@ package shinydesign.boilerroom.utils
 		{
 			this.logger.warn(message);
 		}
-		public function error(message : String) : void
+		public function errorObj(e:Error):void{
+			this.logger.error( e.errorID + " " + e.message + " "+	e.getStackTrace());
+			
+		}
+		public function error(e:String) : void
 		{
-			this.logger.error(message);
+			this.logger.error( e);
 				}
 		// other logging methods by level (e.g. warn, error)
 

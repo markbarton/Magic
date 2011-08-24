@@ -10,7 +10,7 @@
 			
 			public var tmpSignal:Signal=new Signal();
 			private  var _warningText:String;
-			private var _warningColor:uint;
+			private var _warningColor:uint=0xD9D9D9;
 
 			public function get warningColor():uint
 			{
@@ -57,6 +57,7 @@
 						repeatBehavior="loop"
 						repeatCount="1"
 						duration="200"  target="{this}"/>
+		
 	</fx:Declarations> 
 	
 	

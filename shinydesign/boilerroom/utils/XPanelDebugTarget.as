@@ -1,12 +1,13 @@
 package shinydesign.boilerroom.utils
 {
-	import mx.logging.targets.LineFormattedTarget;
 	import flash.events.StatusEvent;
+	import flash.net.LocalConnection;
+	import flash.utils.getTimer;
+	
+	import mx.logging.ILogger;
 	import mx.logging.LogEvent;
 	import mx.logging.LogEventLevel;
-	import mx.logging.ILogger;
-	import flash.utils.getTimer;
-	import flash.net.LocalConnection;
+	import mx.logging.targets.LineFormattedTarget;
 	
 	/**
 	 *  Provides a logger target that outputs to a <code>LocalConnection</code>,
@@ -104,6 +105,17 @@ package shinydesign.boilerroom.utils
 			try {
 				//lc.send( "_xpanel1", "dispatchMessage", flash.utils.getTimer(), event.message, level );
 				lc.send( connection, method, flash.utils.getTimer(), category + event.message, level);
+				//internalLog(date + level + category + event.message);
+			} catch (error:ArgumentError) {
+				lc.send( connection, method, flash.utils.getTimer(), "Logging failed: " + error.message, LogEventLevel.ERROR);
+			}
+		}
+		
+		public function logGlobalError(error:Error):void{
+			level = 0x08;
+			try {
+				//lc.send( "_xpanel1", "dispatchMessage", flash.utils.getTimer(), event.message, level );
+				lc.send( connection, method, flash.utils.getTimer(), error.errorID + " " + error.message + " " + 	error.getStackTrace(), level);
 				//internalLog(date + level + category + event.message);
 			} catch (error:ArgumentError) {
 				lc.send( connection, method, flash.utils.getTimer(), "Logging failed: " + error.message, LogEventLevel.ERROR);

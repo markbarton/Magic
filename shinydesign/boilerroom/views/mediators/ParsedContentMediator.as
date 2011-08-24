@@ -3,9 +3,11 @@ package shinydesign.boilerroom.views.mediators
 	import images.ImageAsset;
 	
 	import mx.controls.Alert;
+	import mx.utils.ObjectUtil;
 	
 	import org.robotlegs.mvcs.Mediator;
 	
+	import shinydesign.boilerroom.model.vo.Allocation;
 	import shinydesign.boilerroom.model.vo.PostContent;
 	import shinydesign.boilerroom.signals.AllocationReturnSignal;
 	import shinydesign.boilerroom.signals.ContentProcessedSignal;
@@ -41,18 +43,27 @@ package shinydesign.boilerroom.views.mediators
 			allocationReturnSignal.add(warnAllocation);
 		}
 		
-		private function warnAllocation(warning:String):void
+		private function warnAllocation(allocation:Allocation):void
 		{
+			log.debug(ObjectUtil.toString(allocation));
 			// TODO Auto Generated method stub
-			if(warning!="false"){
-				view.warningText="Allocation Warning (" + warning + ")";
-				view.warningColor=returnAllocationColor(warning);
+			if(allocation.hasAllocation!=false){
+				if(allocation.hasMulti){
+				//Multiple matches to the allocation - this wouild be due to no template
+					Alert.show("Multiple Allocations have been found for " + allocation.matchingKey + ".\n\nThe cruise lines matching are: " + allocation.cruiseLines,"Multiple Allocations",4);
+					view.warningText="Multiple Allocation Warning";
+					view.warningColor=returnAllocationColor(allocation.allocationType);
+				}else{
+				view.warningText="Allocation Warning (" + allocation.allocationType + ")";
+				view.warningColor=returnAllocationColor(allocation.allocationType);
+				}
 				
 			//view.AllocationWarning.text="Allocation Warning (" + warning + ")";
 			//view.AllocationWarning.setStyle("color",returnAllocationColor(warning));
 			}
 			else{
 			view.warningText="";
+			view.warningColor=0xD9D9D9;
 			}
 		}
 		

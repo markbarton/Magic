@@ -1,6 +1,6 @@
 package shinydesign.boilerroom.controller
 {
-	import mx.logging.Log;
+		import mx.logging.Log;
 	import mx.logging.LogEventLevel;
 	import mx.logging.targets.TraceTarget;
 	
@@ -53,8 +53,11 @@ package shinydesign.boilerroom.controller
 			
 			log.debug("Command >> StartupCommand Called");
 			
+			
 			//logger.logContent(Logger.DEBUG,"Startup Command");
 			service.CheckBrowserReady();
 		}
+		
+		
 	}
 }

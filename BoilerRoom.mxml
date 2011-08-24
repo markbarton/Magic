@@ -6,11 +6,14 @@
 			   xmlns:views="shinydesign.boilerroom.views.*" 
 			   xmlns:components="shinydesign.boilerroom.views.components.*" 
 			   height="100%"
-			   xmlns:contentparser="shinydesign.boilerroom.views.contentparser.*" xmlns:topbanner="shinydesign.boilerroom.views.topbanner.*" xmlns:product="shinydesign.boilerroom.views.product.*" xmlns:admin="shinydesign.boilerroom.views.admin.*" >
+			   xmlns:contentparser="shinydesign.boilerroom.views.contentparser.*" xmlns:topbanner="shinydesign.boilerroom.views.topbanner.*" 
+			   xmlns:product="shinydesign.boilerroom.views.product.*" xmlns:admin="shinydesign.boilerroom.views.admin.*" xmlns:logging="com.adobe.ac.logging.*" >
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<context:BoilerRoomContext contextView="{this}"/>
-		
+		<logging:GlobalExceptionHandler preventDefault="true">
+			<logging:LogHandlerAction/>
+		</logging:GlobalExceptionHandler>
 	</fx:Declarations>
 	<s:transitions>
 		<s:Transition fromState="*" toState="ProductInformation" >

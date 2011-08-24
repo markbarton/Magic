@@ -39,9 +39,15 @@
 				
 				tmpSignal.dispatch(event.currentTarget.id);
 				//var iconButton:IconButton=event.currentTarget as IconButton;
-				//iconButton.activated=true;
+				//iconButton.activated=true
 				
-				
+			}
+			
+			import flash.net.navigateToURL;
+			
+			private function newWin(url:String):void {
+				var urlRequest:URLRequest = new URLRequest(url);
+				navigateToURL(urlRequest, "_blank");
 			}
 			 
 		]]>
@@ -53,6 +59,7 @@
 		<s:BitmapImage source="{images.ImageAsset.TitleIcon}" left="5" verticalAlign="middle" top="9"/>
 	<s:Label left="140" top="18" id="bannerTitle" fontSize="18"/>
 			<s:HGroup verticalAlign="middle" height="100%" paddingRight="5" width="100%" horizontalAlign="right" right="0">
+				<s:Button click="newWin('http://myintranet.trailfinders.com/magic.nsf/MagicInstructions.pdf')" label="Open Help"  skinClass="shinydesign.boilerroom.views.topbanner.skin.LinkButton"/>
 				<skin:IconButton buttonMode="true" id="contentParserButton" skinClass="shinydesign.boilerroom.views.topbanner.skin.IconButtonSkin"  height="50" width="50"
 								  downIcon="{images.ImageAsset.parserButtonDown}" 
 								  overIcon="{images.ImageAsset.parserButtonOver}"
